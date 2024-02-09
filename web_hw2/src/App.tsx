@@ -1,5 +1,5 @@
-import React from 'react'
-import './App.css'
+import React from "react";
+import "./App.css";
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -32,14 +32,25 @@ import './App.css'
 
 // export default App
 
-
-
 interface Pokemon {
-  name:string;
+  name: string;
 }
 
 interface PokemonListResponse {
   results: Pokemon[];
+}
+
+interface PokemonData {
+  name: string;
+  spriteUrl: string;
+  height: number;
+  weight: number;
+  type: string;
+  // hp: string;
+  // attack: string;
+  // specialAttack: string;
+  // specialDefense: string;
+  // speed: string;
 }
 
 export const App: React.FC = () => {
@@ -48,130 +59,76 @@ export const App: React.FC = () => {
   const K = 386;
   async function fetchFirstKPokemonNames() {
     try {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${K}`);
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon?limit=${K}`
+      );
       const data: PokemonListResponse = await response.json();
-      setPokemonNames(data.results.map(pokemon => pokemon.name));
+      setPokemonNames(data.results.map((pokemon) => pokemon.name));
     } catch (error) {
-      console.error('Error fetching Pokémon names:', error);
+      console.error("Error fetching Pokémon names:", error);
       throw error;
     }
   }
 
+  const getRandomIndex = () => {
+    return Math.floor(Math.random() * pokemonNames.length);
+  };
+
+  // Function to get 3 random pokemons
+  const getRandomNames = () => {
+    const randomStrings: string[] = [];
+    while (randomStrings.length < 3) {
+      const index = getRandomIndex();
+      randomStrings.push(pokemonNames[index]);
+    }
+    return randomStrings;
+  };
+
+  let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
+
+
+  const fetchPokemonData = async (name: string) => {
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+      if (!response.ok) {
+        console.log("Error in fetching");
+      } else {
+        const data: PokemonData[] = await response.json();
+        console.log(data);
+        setPokemonData(data);
+      }
+    } catch (error) {
+      console.log("Error fetching comments:", error);
+    }
+  };
+
   React.useEffect(() => {
     fetchFirstKPokemonNames();
+    getRandomNames().map((name) => { 
+      fetchPokemonData(name);
+    });
+
   }, []);
 
-  // const getRandomIndex = () => {
-  //   return Math.floor(Math.random() * pokemonNames.length);
-  // };
-
-  // // Function to get 3 random pokemons
-  // const getRandomNames = () => {
-  //   const randomStrings: string[] = [];
-  //   while (randomStrings.length < 3) {
-  //     const index = getRandomIndex();
-  //     if (!randomStrings.includes(pokemonNames[index])) {
-  //       randomStrings.push(pokemonNames[index]);
-  //     }
-  //   }
-  //   return randomStrings;
-  // };
-  
   return (
     <>
-    <h1>My Pokemon</h1>
-    <div >names</div>
-    <div>
-      <ul>
-          {pokemonNames.map((name, index) => (
+      <h1>My Pokemon</h1>
+      <div>names</div>
+      <div>
+        <ul>
+          {getRandomNames().map((name, index) => (
             <li key={index}>{name}</li>
           ))}
-      </ul>
-    </div>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          {pokemonData.map((data, index) => (
+            <li key={index}>{data.name}</li>
+          ))}
+        </ul>
+      </div>
     </>
-  )}
-
-
-// interface PokemonData {
-//   name: string;
-//   spriteUrl: string;
-//   height: number;
-//   weight: number;
-//   type: string;
-//   // hp: string;
-//   // attack: string;
-//   // specialAttack: string;
-//   // specialDefense: string;
-//   // speed: string;
-// }
-
-
-// export const App: React.FC = () => {
-//   let [pokemonData, setPokemonData] = React.useState<boolean>(false);
-
-
-//   const fetchPokemonData = async () => {
-//     fetch(`https://pokeapi.co/api/v2/pokemon/${rand}`)
-//         .then((response: Response) => {
-//             if (!response.ok) {
-//               console.log("error in fetching");
-//             }
-//             else {
-//                 response.json().then((data: PokemonData[]) => {
-//                     console.log(data);
-//                 });
-//             }
-//         })
-//         .catch((error: Error) => {
-//           console.log('Error fetching comments:', error);
-//         })
-//         .finally(() => {
-           
-//         });
-//   };
-
-//   let initialContext: AppContext = {
-//     errorMessage: errorMessage,
-//     query: query,
-//     setQuery: (value: number) => {
-//         setQuery(value);
-//     },
-//     onRetry: async () => {
-//       fetchCommentData();
-//     },
-//   };
-
-
-//   React.useEffect(() => {
-//     fetchPokemonData();
-//   }, []);
-
-//   return (
-//     <AppContext.Provider value={initialContext}>
-//       <div className="app-container">
-//         <div className="title-container">
-//           <Title />
-//         </div>
-//         <div className="search-bar-container">
-//           <SearchBar />
-//         </div>
-//         {showLoader && <Loader />}
-//         <div className="comments-container">
-//           {comments.map((comment, index) => {
-//             return (
-//               <Comment
-//                 key={index}
-//                 id={comment.id}
-//                 name={comment.name}
-//                 email={comment.email}
-//                 body={comment.body}
-//               />
-//             );
-//           })}
-//           </div>
-//         {errorMessage && <ErrorState />}
-//       </div>
-//     </AppContext.Provider>
-//   );
-// };
-
+  );
+};
+export default App;
