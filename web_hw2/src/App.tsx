@@ -2,31 +2,21 @@ import React from "react";
 import "./App.css";
 import { MyPokemon } from "./components/Pages/MyPokemonPage/MyPokemon";
 import { Battle } from "./components/Pages/BattlePage/Battle";
+import { PokemonData } from "./components/Types";
+import { fetchRandomPokemons } from "./utils/utils";
 
-interface Pokemon {
+interface PokemonName {
   name: string;
 }
 
 interface PokemonListResponse {
-  results: Pokemon[];
-}
-
-export interface PokemonData {
-  name: string;
-  spriteUrl: string;
-  height: number;
-  weight: number;
-  type: string;
-  // hp: string;
-  // attack: string;
-  // specialAttack: string;
-  // specialDefense: string;
-  // speed: string;
+  results: PokemonName[];
 }
 
 interface AppContext {
   pokemonData: PokemonData[];
   setPokemonData: (data: PokemonData[]) => void;
+  allPokemonNames: string[];
   page: string;
   setPage: (page: string) => void;
 }
@@ -47,10 +37,8 @@ export const App: React.FC = () => {
       const data: PokemonListResponse = await response.json();
       const allPokemonNames = data.results.map((pokemon) => pokemon.name);
       setPokemonNames(allPokemonNames);
-      const names = getRandomNames(allPokemonNames);
       try {
-        const promises = names.map((name) => fetchPokemonData(name));
-        const results = await Promise.all(promises);
+        const results = await fetchRandomPokemons(allPokemonNames);
         setPokemonData(results);
       } catch (error) {
         console.log("Error fetching pokemon  data:", error);
@@ -61,44 +49,13 @@ export const App: React.FC = () => {
     }
   }
 
-  const getRandomIndex = (length: number) => {
-    return Math.floor(Math.random() * length);
-  };
-
-  // Function to get 3 random pokemons
-  const getRandomNames = (names: string[]) => {
-    const randomStrings: string[] = [];
-    while (randomStrings.length < 3) {
-      const index = getRandomIndex(names.length);
-      if (!randomStrings.includes(names[index])) {
-        randomStrings.push(names[index]);
-      }
-    }
-    return randomStrings;
-  };
-
-  const fetchPokemonData = async (name: string): Promise<PokemonData> => {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    if (!response.ok) {
-      throw new Error(`Error in fetching data for ${name}`);
-    } else {
-      const responseData = await response.json();
-      return {
-        name: responseData.name,
-        spriteUrl: responseData.sprites.front_default,
-        height: responseData.height,
-        weight: responseData.weight,
-        type: responseData.types[0].type.name,
-      };
-    }
-  };
-
   //initial context object that will be used by provider
   let initialContext: AppContext = {
     pokemonData: pokemonData,
     setPokemonData: (pokemonData: PokemonData[]) => {
       setPokemonData(pokemonData);
     },
+    allPokemonNames: pokemonNames,
     page: "My Pokemon",
     setPage: (page: string) => {
       setPage(page);
@@ -114,10 +71,6 @@ export const App: React.FC = () => {
 
   return (
     <AppContext.Provider value={initialContext}>
-      <div>
-        Pokemon Names length
-        {pokemonNames.length}
-      </div>
       {page === "My Pokemon" && <MyPokemon />}
       {page === "Battle" && <Battle />}
     </AppContext.Provider>

@@ -3,7 +3,7 @@ import React from "react";
 interface PokemonImageProps {
   name: string;
   spriteUrl: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const PokemonImage: React.FC<PokemonImageProps> = ({

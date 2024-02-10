@@ -3,8 +3,9 @@ import "./MyPokemon.css";
 import { Header } from "../../Header/Header";
 import { PokemonStats } from "../../PokemonStats/PokemonStats";
 import { PokemonImage } from "../../PokemonStats/PokemonImage";
-import { AppContext, PokemonData } from "../../../App";
+import { AppContext } from "../../../App";
 import { Button } from "../../Buttons/Button";
+import { PokemonData } from "../../Types";
 
 export const MyPokemon: React.FC = () => {
   const context = React.useContext(AppContext)!;
@@ -44,6 +45,9 @@ export const MyPokemon: React.FC = () => {
           height={selectedPokemon.height}
           weight={selectedPokemon.weight}
           type={selectedPokemon.type}
+          moves={selectedPokemon.moves}
+          wins={selectedPokemon.wins}
+          losses={selectedPokemon.losses}
         />
       )}
     </>
