@@ -1,5 +1,7 @@
 import React from "react";
 import "./App.css";
+import { MyPokemon } from "./components/Pages/MyPokemonPage/MyPokemon";
+import { Battle } from "./components/Pages/BattlePage/Battle";
 
 interface Pokemon {
   name: string;
@@ -9,7 +11,7 @@ interface PokemonListResponse {
   results: Pokemon[];
 }
 
-interface PokemonData {
+export interface PokemonData {
   name: string;
   spriteUrl: string;
   height: number;
@@ -25,6 +27,8 @@ interface PokemonData {
 interface AppContext {
   pokemonData: PokemonData[];
   setPokemonData: (data: PokemonData[]) => void;
+  page: string;
+  setPage: (page: string) => void;
 }
 
 export const AppContext = React.createContext<AppContext | null>(null);
@@ -32,6 +36,7 @@ export const AppContext = React.createContext<AppContext | null>(null);
 export const App: React.FC = () => {
   let [pokemonNames, setPokemonNames] = React.useState<string[]>([]);
   let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
+  let [page, setPage] = React.useState<string>("My Pokemon");
 
   const K = 386;
   async function fetchFirstKPokemonNames() {
@@ -93,7 +98,11 @@ export const App: React.FC = () => {
     pokemonData: pokemonData,
     setPokemonData: (pokemonData: PokemonData[]) => {
       setPokemonData(pokemonData);
-    }
+    },
+    page: "My Pokemon",
+    setPage: (page: string) => {
+      setPage(page);
+    },
   };
 
   React.useEffect(() => {
@@ -105,20 +114,12 @@ export const App: React.FC = () => {
 
   return (
     <AppContext.Provider value={initialContext}>
-      <h1>My Pokemon</h1>
-      <div>names</div>
       <div>
-        {" "}
         Pokemon Names length
         {pokemonNames.length}
       </div>
-      <div>
-        <ul>
-          {pokemonData.map((data, index) => (
-            <li key={index}>{data.name}</li>
-          ))}
-        </ul>
-      </div>
+      {page === "My Pokemon" && <MyPokemon />}
+      {page === "Battle" && <Battle />}
     </AppContext.Provider>
   );
 };
