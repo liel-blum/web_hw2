@@ -1,37 +1,6 @@
 import React from "react";
 import "./App.css";
 
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vitejs.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
-
 interface Pokemon {
   name: string;
 }
@@ -53,8 +22,16 @@ interface PokemonData {
   // speed: string;
 }
 
+interface AppContext {
+  pokemonData: PokemonData[];
+  setPokemonData: (data: PokemonData[]) => void;
+}
+
+export const AppContext = React.createContext<AppContext | null>(null);
+
 export const App: React.FC = () => {
   let [pokemonNames, setPokemonNames] = React.useState<string[]>([]);
+  let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
 
   const K = 386;
   async function fetchFirstKPokemonNames() {
@@ -63,63 +40,77 @@ export const App: React.FC = () => {
         `https://pokeapi.co/api/v2/pokemon?limit=${K}`
       );
       const data: PokemonListResponse = await response.json();
-      setPokemonNames(data.results.map((pokemon) => pokemon.name));
+      const allPokemonNames = data.results.map((pokemon) => pokemon.name);
+      setPokemonNames(allPokemonNames);
+      const names = getRandomNames(allPokemonNames);
+      try {
+        const promises = names.map((name) => fetchPokemonData(name));
+        const results = await Promise.all(promises);
+        setPokemonData(results);
+      } catch (error) {
+        console.log("Error fetching pokemon  data:", error);
+      }
     } catch (error) {
       console.error("Error fetching Pokémon names:", error);
       throw error;
     }
   }
 
-  const getRandomIndex = () => {
-    return Math.floor(Math.random() * pokemonNames.length);
+  const getRandomIndex = (length: number) => {
+    return Math.floor(Math.random() * length);
   };
 
   // Function to get 3 random pokemons
-  const getRandomNames = () => {
+  const getRandomNames = (names: string[]) => {
     const randomStrings: string[] = [];
     while (randomStrings.length < 3) {
-      const index = getRandomIndex();
-      randomStrings.push(pokemonNames[index]);
+      const index = getRandomIndex(names.length);
+      if (!randomStrings.includes(names[index])) {
+        randomStrings.push(names[index]);
+      }
     }
     return randomStrings;
   };
 
-  let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
+  const fetchPokemonData = async (name: string): Promise<PokemonData> => {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+    if (!response.ok) {
+      throw new Error(`Error in fetching data for ${name}`);
+    } else {
+      const responseData = await response.json();
+      return {
+        name: responseData.name,
+        spriteUrl: responseData.sprites.front_default,
+        height: responseData.height,
+        weight: responseData.weight,
+        type: responseData.types[0].type.name,
+      };
+    }
+  };
 
-
-  const fetchPokemonData = async (name: string) => {
-    try {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-      if (!response.ok) {
-        console.log("Error in fetching");
-      } else {
-        const data: PokemonData[] = await response.json();
-        console.log(data);
-        setPokemonData(data);
-      }
-    } catch (error) {
-      console.log("Error fetching comments:", error);
+  //initial context object that will be used by provider
+  let initialContext: AppContext = {
+    pokemonData: pokemonData,
+    setPokemonData: (pokemonData: PokemonData[]) => {
+      setPokemonData(pokemonData);
     }
   };
 
   React.useEffect(() => {
     fetchFirstKPokemonNames();
-    getRandomNames().map((name) => { 
-      fetchPokemonData(name);
-    });
-
+    return () => {
+      console.log("cleanup");
+    };
   }, []);
 
   return (
-    <>
+    <AppContext.Provider value={initialContext}>
       <h1>My Pokemon</h1>
       <div>names</div>
       <div>
-        <ul>
-          {getRandomNames().map((name, index) => (
-            <li key={index}>{name}</li>
-          ))}
-        </ul>
+        {" "}
+        Pokemon Names length
+        {pokemonNames.length}
       </div>
       <div>
         <ul>
@@ -128,7 +119,7 @@ export const App: React.FC = () => {
           ))}
         </ul>
       </div>
-    </>
+    </AppContext.Provider>
   );
 };
 export default App;
