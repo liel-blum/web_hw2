@@ -1,18 +1,14 @@
 import React from "react";
 import { MoveEntry } from "../Types";
+import { BattleContext } from "../Pages/BattlePage/Battle"
 
 interface MoveProps {
   moveEntry: MoveEntry;
   isUser: boolean;
 }
 
-const handleMoveClick = (isUser: boolean) => {
-    if(isUser){
-
-    }
-  };
-
 export const PokemonMove: React.FC<MoveProps> = ({ moveEntry, isUser }) => {
+  let context = React.useContext(BattleContext);
   const [movePower, setmovePower] = React.useState<Number>(0);
 
   const fetchMovePower = async (move: MoveEntry) => {
@@ -30,6 +26,12 @@ export const PokemonMove: React.FC<MoveProps> = ({ moveEntry, isUser }) => {
       throw error;
     }
   }
+
+  const handleMoveClick = (isUser: boolean) => {
+    if (isUser){
+      context?.setUserMove(moveEntry.name, movePower);
+    } 
+  };
 
   React.useEffect(() => {
     fetchMovePower(moveEntry);
