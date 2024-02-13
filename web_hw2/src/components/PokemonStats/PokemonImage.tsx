@@ -1,4 +1,5 @@
 import React from "react";
+import "./PokemonImage.css";
 
 interface PokemonImageProps {
   name: string;

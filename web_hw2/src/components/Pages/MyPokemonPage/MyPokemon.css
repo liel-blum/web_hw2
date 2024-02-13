@@ -1,0 +1,61 @@
+.page {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.start-over-button {
+    flex-shrink: 2;
+    align-self: flex-end;
+}
+
+.battle-button {
+    flex-shrink: 2;
+    align-self: center;
+}
+
+.pokemons {
+    flex-grow: 20;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.pokemonss-left {
+    flex-grow: 1;
+    align-self: flex-start;
+}
+
+/* .pokemon-images {
+    display: flex;
+    flex-direction: row;
+} */
+
+.pokemon-images {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This centers the items horizontally in the container */
+    justify-content: space-around; /* This evenly spaces the items vertically */
+    /* You can add additional styling as needed, like padding or margins */
+}
+
+.pokemon-image {
+    flex: 1;
+    align-self: center;
+    cursor: pointer;
+}
+
+.pokemon-image:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.pokemons-right {
+    flex-grow: 5;
+}
+
+.pokemon-stats {
+    flex: 4;
+}
+
+

@@ -26,30 +26,47 @@ export const MyPokemon: React.FC = () => {
   return (
     <>
       <Header header="My Pokemon" />
-      <div className="button-container">
-        <Button onClick={() => context.setPage("Battle")} text="Let's Battle" />
-      </div>
-      <div>
-        {pokemonData.map((data, index) => (
-          <PokemonImage
-            key={index}
-            name={data.name}
-            spriteUrl={data.spriteUrl}
-            onClick={() => handlePokemonClick(data)}
+      <div className="page">
+        <div className="start-over-button">
+            <Button onClick={() => console.log("start over")} text="Start Over" />
+        </div>
+        <div className="pokemons">
+            <div className="pokemon-left">
+                <div className="pokemon-images">
+                    {pokemonData.map((data, index) => (
+                        <PokemonImage
+                        key={index}
+                        name={data.name}
+                        spriteUrl={data.spriteUrl}
+                        onClick={() => handlePokemonClick(data)}
+                        />
+                    ))}
+                </div>
+            </div>
+            <div className="pokemons-right">
+                <div className="pokemon-stats">
+                {selectedPokemon && (
+                    <PokemonStats
+                    name={selectedPokemon.name}
+                    height={selectedPokemon.height}
+                    weight={selectedPokemon.weight}
+                    type={selectedPokemon.type}
+                    moves={selectedPokemon.moves}
+                    wins={selectedPokemon.wins}
+                    losses={selectedPokemon.losses}
+                    />
+                )}
+                </div>
+            </div>
+        </div>
+        <div className="battle-button">
+          <Button
+            onClick={() => context.setPage("Battle")}
+            text="Let's Battle"
           />
-        ))}
+        </div>
+        <div className="winning-bar"></div>
       </div>
-      {selectedPokemon && (
-        <PokemonStats
-          name={selectedPokemon.name}
-          height={selectedPokemon.height}
-          weight={selectedPokemon.weight}
-          type={selectedPokemon.type}
-          moves={selectedPokemon.moves}
-          wins={selectedPokemon.wins}
-          losses={selectedPokemon.losses}
-        />
-      )}
     </>
   );
 };
