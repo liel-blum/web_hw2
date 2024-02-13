@@ -50,7 +50,7 @@ export const MyPokemon: React.FC = () => {
                     name={selectedPokemon.name}
                     height={selectedPokemon.height}
                     weight={selectedPokemon.weight}
-                    type={selectedPokemon.type}
+                    type={selectedPokemon.type.name}
                     moves={selectedPokemon.moves}
                     wins={selectedPokemon.wins}
                     losses={selectedPokemon.losses}

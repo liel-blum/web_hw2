@@ -6,13 +6,22 @@ export interface MoveEntry {
 export interface MoveElement {
   move: MoveEntry;
 }
+export interface MoveData {
+  name: string;
+  power: number;
+}
+
+export interface TypeEntry {
+    name: string;
+    url: string;
+  }
 
 export interface PokemonData {
   name: string;
   spriteUrl: string;
   height: number;
   weight: number;
-  type: string;
+  type: TypeEntry;
   moves: MoveEntry[];
   losses: number;
   wins: number;

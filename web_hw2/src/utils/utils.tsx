@@ -1,9 +1,9 @@
-import { MoveElement, MoveEntry, PokemonData } from "../components/Types";
+import { MoveElement, MoveEntry, PokemonData, TypeEntry } from "../components/Types";
 
 const NUM_POKEMONS: number = 3;
 const NUM_MOVES: number = 4;
 
-const getRandomIndex = (length: number) => {
+export const getRandomIndex = (length: number) => {
   return Math.floor(Math.random() * length);
 };
 
@@ -30,7 +30,7 @@ const fetchPokemonData = async (name: string): Promise<PokemonData> => {
       spriteUrl: responseData.sprites.front_default,
       height: responseData.height,
       weight: responseData.weight,
-      type: responseData.types[0].type.name,
+      type: responseData.types[0].type as TypeEntry,
       moves: responseData.moves.map(
         (moveElement: MoveElement) => moveElement.move
       ),

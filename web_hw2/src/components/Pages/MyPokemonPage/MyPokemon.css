@@ -16,6 +16,7 @@
 }
 
 .pokemons {
+    width:90%;
     flex-grow: 20;
     align-self: center;
     display: flex;
@@ -24,7 +25,6 @@
 
 .pokemonss-left {
     flex-grow: 1;
-    align-self: flex-start;
 }
 
 /* .pokemon-images {
