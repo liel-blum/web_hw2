@@ -3,7 +3,7 @@ import { Header } from "../../Header/Header";
 import { AppContext } from "../../../App";
 import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { MoveData, PokemonData } from "../../Types";
-import { fetchRandomPokemons, fetchRandomMoves } from "../../../utils/utils";
+import { fetchRandomPokemons, getRandomMoves } from "../../../utils/utils";
 import { SelectedPokemon } from "../../SelectedPokemon";
 
 

@@ -1,8 +1,9 @@
 import React from "react";
 import { PokemonData } from "./Types";
 import { PokemonImage } from "./PokemonStats/PokemonImage";
-import { fetchRandomMoves, getRandomIndex } from "../utils/utils";
+import { getRandomMoves, getRandomIndex } from "../utils/utils";
 import { PokemonMove } from "./PokemonStats/PokemonMove";
+import { BattleContext } from "./Pages/BattlePage/Battle";
 
 interface SelectedPokemonProps {
   pokemonData: PokemonData;
@@ -14,6 +15,14 @@ const chooseRandomMove = (moves: string[]): string => {
 }
 
 export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({ pokemonData, isUser }) => {
+  let context = React.useContext(BattleContext);
+
+  const randomMoves = getRandomMoves(pokemonData.moves)
+  
+  if (!isUser && context?.userMove) {
+    context?.setOpponentMove(chooseRandomMove(randomMoves.map(move => move.name));
+  }
+  
   return (
     <div className="pokemon">
       <div className="pokemon-image">
@@ -27,7 +36,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({ pokemonData, i
             <h1>{pokemonData.name}</h1>
             <h2>Moves</h2>
             <ul>
-              {fetchRandomMoves(pokemonData.moves).map(
+              {randomMoves.map(
                 (move, index) => (
                   <PokemonMove key={index} moveEntry={move} isUser={isUser} />
                 )

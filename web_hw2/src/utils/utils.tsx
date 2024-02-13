@@ -47,7 +47,7 @@ export const fetchRandomPokemons = async (allPokemonNames: string[]): Promise<Po
     return results;
 }
 
-export const fetchRandomMoves = (moves: MoveEntry[]): MoveEntry[] => {
+export const getRandomMoves = (moves: MoveEntry[]): MoveEntry[] => {
     const randomMoves: MoveEntry[] = [];
     while (randomMoves.length < NUM_MOVES && randomMoves.length < moves.length) {
         const index = getRandomIndex(moves.length);

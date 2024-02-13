@@ -25,6 +25,7 @@ export interface PokemonData {
   moves: MoveEntry[];
   losses: number;
   wins: number;
+  base_stats: BaseStats;
   // hp: string;
   // attack: string;
   // specialAttack: string;

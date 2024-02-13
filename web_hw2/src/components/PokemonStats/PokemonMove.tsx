@@ -9,7 +9,7 @@ interface MoveProps {
 
 export const PokemonMove: React.FC<MoveProps> = ({ moveEntry, isUser }) => {
   let context = React.useContext(BattleContext);
-  const [movePower, setmovePower] = React.useState<Number>(0);
+  const [movePower, setmovePower] = React.useState<number>(0);
 
   const fetchMovePower = async (move: MoveEntry) => {
     try{
@@ -27,9 +27,12 @@ export const PokemonMove: React.FC<MoveProps> = ({ moveEntry, isUser }) => {
     }
   }
 
-  const handleMoveClick = (isUser: boolean) => {
+  const handleMoveClick = () => {
     if (isUser){
-      context?.setUserMove(moveEntry.name, movePower);
+      context?.setUserMove({
+        name: moveEntry.name,
+        power: movePower,
+      });
     } 
   };
 
@@ -41,7 +44,7 @@ export const PokemonMove: React.FC<MoveProps> = ({ moveEntry, isUser }) => {
   }, []);
   return (
     <div className="move">
-      <div className="move-name">
+      <div className="move-name" onClick={handleMoveClick}>
         <p>{`${moveEntry.name} (${movePower})`}</p>
       </div>
     </div>
