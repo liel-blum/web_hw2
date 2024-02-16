@@ -17,21 +17,21 @@ const chooseRandomMove = (moves: string[]): string => {
 export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({ pokemonData, isUser }) => {
   let context = React.useContext(BattleContext);
 
-  const randomMoves = getRandomMoves(pokemonData.moves)
+  const randomMoves = getRandomMoves(pokemonData.moves);
   
   if (!isUser && context?.userMove) {
-    context?.setOpponentMove(chooseRandomMove(randomMoves.map(move => move.name));
+    context?.setOpponentMove(chooseRandomMove(randomMoves.map(move => move.name)));
   }
   
   return (
-    <div className="pokemon">
-      <div className="pokemon-image">
+    <div className="selected-pokemon">
+      <div className="selected-pokemon-image">
         <PokemonImage
           name={pokemonData.name}
           spriteUrl={pokemonData.spriteUrl}
         />
       </div>
-      <div className="pokemon-moves">
+      <div className="selected-pokemon-moves">
           <div>
             <h1>{pokemonData.name}</h1>
             <h2>Moves</h2>

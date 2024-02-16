@@ -37,13 +37,14 @@ const fetchPokemonData = async (name: string): Promise<PokemonData> => {
       baseStats: {
         hp: responseData.stats[0].base_stat,
         attack: responseData.stats[1].base_stat,
+        defense: responseData.stats[2].base_stat,
         specialAttack: responseData.stats[3].base_stat,
         specialDefense: responseData.stats[4].base_stat,
         speed: responseData.stats[5].base_stat,
-        defense: responseData.stats[2].base_stat,
       },
       losses: 0,
       wins: 0,
+      alreadyPlayed: false,
     };
   }
 };
