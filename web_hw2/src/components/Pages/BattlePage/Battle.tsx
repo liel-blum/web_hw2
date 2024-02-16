@@ -3,8 +3,9 @@ import { Header } from "../../Header/Header";
 import { AppContext } from "../../../App";
 import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { MoveData, PokemonData } from "../../Types";
-import { fetchRandomPokemons, getRandomMoves } from "../../../utils/utils";
+import { fetchRandomPokemons } from "../../../utils/utils";
 import { SelectedPokemon } from "../../SelectedPokemon";
+import { Game } from "../../Game/Game";
 
 
 export interface BattleContext {
@@ -27,13 +28,19 @@ export const Battle: React.FC = () => {
   const [userMove, setUserMove] = React.useState<MoveData | null>(null);
   const [opponentMove, setOpponentMove] = React.useState<MoveData | null>(null);
 
+  // const chooseOpRandomPokemon = (opponentPokemonData: PokemonData[]) => {
+    
+  // };
+
   const handlePokemonClick = (pokemon: PokemonData) => {
-    setSelectedUserPokemon(pokemon);
-    setSelectedOpponentPokemon(
-      opponentPokemonData[
-        Math.floor(Math.random() * opponentPokemonData.length)
-      ]
-    );
+    if (!pokemon.alreadyPlayed) {
+      pokemon.alreadyPlayed = true;
+      setSelectedUserPokemon(pokemon);
+      const notPlayedPokemons = opponentPokemonData.filter(pokemon => !pokemon.alreadyPlayed);
+      let selectedOpponenetPokemon = notPlayedPokemons[Math.floor(Math.random() * opponentPokemonData.length)];
+      selectedOpponenetPokemon.alreadyPlayed = true;
+      setSelectedOpponentPokemon(selectedOpponenetPokemon);
+    }
   };
 
   async function fetchOpponentPokemons(allPokemonNames: string[]) {
@@ -66,43 +73,47 @@ export const Battle: React.FC = () => {
   return (
     <BattleContext.Provider value={initialContext}>
       <Header header="Battle" />
-      <div className="user">
-        {!selectedUserPokemon && 
-          <div className="user pokemons">
-            {userPokemonData.map((data, index) => (
-              <PokemonImage
-                key={index}
-                name={data.name}
-                spriteUrl={data.spriteUrl}
-                onClick={() => handlePokemonClick(data)}
-              />
-            ))}
+      <div className="battle-prompt">
+        <div className="user">
+          {!selectedUserPokemon && 
+            <div className="user pokemons">
+              {userPokemonData.map((data, index) => (
+                <PokemonImage
+                  key={index}
+                  name={data.name}
+                  spriteUrl={data.spriteUrl}
+                  showName={true}
+                  onClick={() => handlePokemonClick(data)}
+                />
+              ))}
+            </div>
+          }
+          <div className="user moves">
+            {selectedUserPokemon &&
+              SelectedPokemon({ pokemonData: selectedUserPokemon, isUser: true})}
           </div>
-        }
-        <div className="user moves">
-          {selectedUserPokemon &&
-            SelectedPokemon({ pokemonData: selectedUserPokemon, isUser: true})}
         </div>
-      </div>
-      <div className="game" >
-        {userMove && opponentMove &&
-        <Game userMove={userMove} opponentMove={opponentMove} userData={userPokemonData}/>}
-      </div>
-      <div className="opponent">
-        {!selectedOpponentPokemon && 
-          <div className="opponent pokemons">
-            {opponentPokemonData.map((data, index) => (
-              <PokemonImage
-                key={index}
-                name={data.name}
-                spriteUrl={data.spriteUrl}
-              />
-            ))}
+        <div className="game" >
+          {userMove && opponentMove && selectedUserPokemon && selectedOpponentPokemon &&
+          <Game userMove={userMove} opponentMove={opponentMove} userPokemonData={selectedUserPokemon} opponentPokemonData={selectedOpponentPokemon}/>}
+        </div>
+        <div className="opponent">
+          {!selectedOpponentPokemon && 
+            <div className="opponent pokemons">
+              {opponentPokemonData.map((data, index) => (
+                <PokemonImage
+                  key={index}
+                  name={data.name}
+                  spriteUrl={data.spriteUrl}
+                  showName={true}
+                />
+              ))}
+            </div>
+          }
+          <div className="opponent moves">
+            {selectedOpponentPokemon &&
+              SelectedPokemon({ pokemonData: selectedOpponentPokemon, isUser: false})}
           </div>
-        }
-        <div className="opponent moves">
-          {selectedOpponentPokemon &&
-            SelectedPokemon({ pokemonData: selectedOpponentPokemon, isUser: false})}
         </div>
       </div>
     </BattleContext.Provider>

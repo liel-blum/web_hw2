@@ -16,6 +16,16 @@ export interface TypeEntry {
     url: string;
   }
 
+export interface BaseStats {
+  hp: number;
+  attack: number;
+  specialAttack: number;
+  specialDefense: number;
+  speed: number;
+  defense: number;
+  //do we need other stats that are not defense and attack?
+}
+
 export interface PokemonData {
   name: string;
   spriteUrl: string;
@@ -25,10 +35,6 @@ export interface PokemonData {
   moves: MoveEntry[];
   losses: number;
   wins: number;
-  base_stats: BaseStats;
-  // hp: string;
-  // attack: string;
-  // specialAttack: string;
-  // specialDefense: string;
-  // speed: string;
+  baseStats: BaseStats;
+  alreadyPlayed: boolean;
 }
