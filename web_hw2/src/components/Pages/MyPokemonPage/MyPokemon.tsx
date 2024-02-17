@@ -7,10 +7,14 @@ import { AppContext } from "../../../App";
 import { Button } from "../../Buttons/Button";
 import { PokemonData } from "../../Types";
 
-export const MyPokemon: React.FC = () => {
+interface MyPokemonProps {
+  handleStartOver: () => Promise<void>;
+}
+
+export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
   const context = React.useContext(AppContext)!;
   const pokemonData = context.pokemonData;
-
+  
   const [selectedPokemon, setSelectedPokemon] =
     React.useState<PokemonData | null>(null);
 
@@ -23,11 +27,10 @@ export const MyPokemon: React.FC = () => {
     }
   };
 
-  const handleStartOver = () => {
-    console.log("start over");
-    localStorage.removeItem("pokemonData");
-  }
+  React.useEffect(() => {
+    setSelectedPokemon(null);
 
+  }, [pokemonData]); 
   return (
     <>
       <Header header="My Pokemon" />

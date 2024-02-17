@@ -19,7 +19,7 @@ interface AppContext {
   allPokemonNames: string[];
   page: string;
   setPage: (page: string) => void;
-}
+  }
 
 export const AppContext = React.createContext<AppContext | null>(null);
 
@@ -55,6 +55,12 @@ export const App: React.FC = () => {
     }
   }
 
+  const handleStartOver = async () => {
+    console.log("start over");
+    localStorage.removeItem("pokemonData");
+    await initiatePokemonData();
+  }
+
   async function initiatePokemonData(){
     console.log("entering initiatePokemonData")
     let data = localStorage.getItem("pokemonNames");
@@ -75,7 +81,6 @@ export const App: React.FC = () => {
     }
     else{
       console.log("fetching pokemon data from api")
-      console.log(allPokemonNames);
       await fetchUserPokemonData(allPokemonNames);
     }
   }
@@ -91,7 +96,7 @@ export const App: React.FC = () => {
     setPage: (page: string) => {
       setPage(page);
     },
-  };
+      };
 
   React.useEffect(() => {
     initiatePokemonData();
@@ -102,7 +107,7 @@ export const App: React.FC = () => {
 
   return (
     <AppContext.Provider value={initialContext}>
-      {page === "My Pokemon" && <MyPokemon />}
+      {page === "My Pokemon" && <MyPokemon handleStartOver={handleStartOver} />}
       {page === "Battle" && <Battle />}
     </AppContext.Provider>
   );
