@@ -6,12 +6,11 @@ interface PokemonStatsProps {
     height: number;
     weight: number;
     type: string;
-    moves: MoveData[];
     wins: number;
     losses: number;
 }
 
-export const PokemonStats: React.FC<PokemonStatsProps> = ({ name, height, weight, type, moves, wins, losses}) => {
+export const PokemonStats: React.FC<PokemonStatsProps> = ({ name, height, weight, type, wins, losses}) => {
     return (
         <div className="pokemon-stats" key={name}>
             <div className="stats-content">
@@ -19,14 +18,6 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({ name, height, weight
                 <p>Height: {height}</p>
                 <p>Weight: {weight}</p>
                 <p>Type: {type}</p>
-                <div className="moves">
-                    <h2>Moves</h2>
-                    <ul>
-                        {moves.map((move, index) => (
-                            <li key={index}>{move.name}</li>
-                        ))}
-                    </ul>
-                    </div>
             </div>
             <div className="win-stats">
             <p>Wins: {wins}</p>

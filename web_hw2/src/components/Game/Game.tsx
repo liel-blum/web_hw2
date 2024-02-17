@@ -1,5 +1,6 @@
 import React from "react";
 import { MoveData, PokemonData } from "../Types";
+import { BattleContext } from "../Pages/BattlePage/Battle";
 
 const DELAY_WIN_TIME = 2500;
 interface GameProps {
@@ -7,6 +8,8 @@ interface GameProps {
   opponentMove: MoveData;
   userPokemonData: PokemonData;
   opponentPokemonData: PokemonData;
+  roundCounter: number;
+  setRoundCounter: (round: number) => void;
 }
 
 interface TypeRelation {
@@ -28,8 +31,10 @@ export const Game: React.FC<GameProps> = ({
   opponentMove,
   userPokemonData,
   opponentPokemonData,
+  roundCounter,
+  setRoundCounter,
 }) => {
-
+  let battleContext = React.useContext(BattleContext);
   const [userTypeFactor, setUserTypeFactor] = React.useState<number>(0);
   const [opponentTypeFactor, setOpponentTypeFactor] = React.useState<number>(0);
   const [isWinner, setIsWinner] = React.useState<boolean | null>(null);
@@ -52,8 +57,6 @@ export const Game: React.FC<GameProps> = ({
 
         let userTF = 1;
         let opponentTF = 1;
-      
-        
         if (userDamageRelations.double_damage_to.some(type => type.name === opponentTypeName)) {
           userTF = 2;
         } else if (userDamageRelations.half_damage_to.some(type => type.name === opponentTypeName)) {
@@ -61,7 +64,6 @@ export const Game: React.FC<GameProps> = ({
         } else if (userDamageRelations.no_damage_to.some(type => type.name === opponentTypeName)) {
           userTF = 0;
         }
-      
         if (userDamageRelations.double_damage_from.some(type => type.name === userTypeName)) {
           opponentTF = 2;
         } else if (userDamageRelations.half_damage_from.some(type => type.name === userTypeName)) {
@@ -69,7 +71,6 @@ export const Game: React.FC<GameProps> = ({
         } else if (userDamageRelations.no_damage_from.some(type => type.name === userTypeName)) {
           opponentTF = 0;
         }
-      
         return { userTF, opponentTF };
       };
 
@@ -126,9 +127,21 @@ export const Game: React.FC<GameProps> = ({
             userPokemonData.losses++;
             opponentPokemonData.wins++;
         }
-        console.log(userPokemonData.wins, opponentPokemonData.losses)
+        let savedPokemonData = localStorage.getItem("pokemonData");
+        if(savedPokemonData !== null){
+            let data = JSON.parse(savedPokemonData);
+            let index = data.findIndex((pokemon: PokemonData) => pokemon.name === userPokemonData.name);
+            data[index] = userPokemonData;
+            localStorage.setItem("pokemonData", JSON.stringify(data));
+        }
+        setTimeout(() => {
+          battleContext?.setSelectedUserPokemon(null);
+          battleContext?.setSelectedOpponentPokemon(null);
+          battleContext?.setUserMove(null);
+          battleContext?.setOpponentMove(null);
+          setRoundCounter(roundCounter + 1);
+      }, DELAY_WIN_TIME);
     }, DELAY_WIN_TIME);
-    console.log(isWinner===null);
     return () => {
       console.log("cleanup");
     };

@@ -10,10 +10,15 @@ import "./Battle.css";
 
 
 export interface BattleContext {
+    selectedUserPokemon: PokemonData | null;
+    setSelectedUserPokemon: (pokemon: PokemonData | null) => void;
+    selectedOpponentPokemon: PokemonData | null;
+    setSelectedOpponentPokemon: (pokemon: PokemonData | null) => void;
     userMove: MoveData | null;
-    setUserMove: (move: MoveData) => void;
+    setUserMove: (move: MoveData | null) => void;
     opponentMove: MoveData | null;
-    setOpponentMove: (move: MoveData) => void;
+    setOpponentMove: (move: MoveData | null) => void;
+
 }
 
 export const BattleContext = React.createContext<BattleContext | null>(null);
@@ -28,6 +33,7 @@ export const Battle: React.FC = () => {
   const [selectedOpponentPokemon, setSelectedOpponentPokemon] = React.useState<PokemonData | null>(null);
   const [userMove, setUserMove] = React.useState<MoveData | null>(null);
   const [opponentMove, setOpponentMove] = React.useState<MoveData | null>(null);
+  const [roundCounter, setRoundCounter] = React.useState<number>(1);
 
   const handlePokemonClick = (pokemon: PokemonData) => {
     if (!pokemon.alreadyPlayed) {
@@ -50,26 +56,40 @@ export const Battle: React.FC = () => {
   }
 
   let initialContext: BattleContext = {
+    selectedUserPokemon: selectedUserPokemon,
+    setSelectedUserPokemon: (pokemon: PokemonData | null) => {
+      setSelectedUserPokemon(pokemon);
+    },
+    selectedOpponentPokemon: selectedOpponentPokemon,
+    setSelectedOpponentPokemon: (pokemon: PokemonData | null) => {
+      setSelectedOpponentPokemon(pokemon);
+    },
     userMove: userMove,
     opponentMove: opponentMove,
-    setUserMove: (userMove: MoveData) => {
+    setUserMove: (userMove: MoveData | null) => {
       setUserMove(userMove);
     },
-    setOpponentMove: (opMove: MoveData) => {
+    setOpponentMove: (opMove: MoveData | null) => {
         setOpponentMove(opMove);
       }
   };
 
   React.useEffect(() => {
-    fetchOpponentPokemons(allPokemonNames);
+    if (roundCounter > 3) {
+      context.setPage("My Pokemon");
+    }
+    else if (roundCounter==1){
+      fetchOpponentPokemons(allPokemonNames);
+    }
     return () => {
       console.log("cleanup");
     };
-  }, []);
+  }, [roundCounter]);
   return (
     <BattleContext.Provider value={initialContext}>
       <Header header="Battle" />
       <div className="battle-prompt">
+        <h1>{roundCounter}</h1>
         <div className="user">
           {!selectedUserPokemon && 
             <div className="user pokemons">
@@ -92,7 +112,7 @@ export const Battle: React.FC = () => {
         </div>
         <div className="game" >
           {userMove && opponentMove && selectedUserPokemon && selectedOpponentPokemon &&
-          <Game userMove={userMove} opponentMove={opponentMove} userPokemonData={selectedUserPokemon} opponentPokemonData={selectedOpponentPokemon}/>}
+          <Game userMove={userMove} opponentMove={opponentMove} userPokemonData={selectedUserPokemon} opponentPokemonData={selectedOpponentPokemon} roundCounter={roundCounter} setRoundCounter={setRoundCounter}/>}
         </div>
         <div className="opponent">
           {!selectedOpponentPokemon && 

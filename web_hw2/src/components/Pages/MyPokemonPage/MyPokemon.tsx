@@ -23,12 +23,17 @@ export const MyPokemon: React.FC = () => {
     }
   };
 
+  const handleStartOver = () => {
+    console.log("start over");
+    localStorage.removeItem("pokemonData");
+  }
+
   return (
     <>
       <Header header="My Pokemon" />
       <div className="page">
         <div className="start-over-button">
-            <Button onClick={() => console.log("start over")} text="Start Over" />
+            <Button onClick={handleStartOver} text="Start Over" />
         </div>
         <div className="pokemons">
             <div className="pokemon-left">
@@ -51,7 +56,6 @@ export const MyPokemon: React.FC = () => {
                     height={selectedPokemon.height}
                     weight={selectedPokemon.weight}
                     type={selectedPokemon.type.name}
-                    moves={selectedPokemon.moves}
                     wins={selectedPokemon.wins}
                     losses={selectedPokemon.losses}
                     />

@@ -29,7 +29,7 @@ export const App: React.FC = () => {
   let [page, setPage] = React.useState<string>("My Pokemon");
 
   const K = 386;
-  async function fetchFirstKPokemonNames() {
+  async function fetchFirstKPokemonNames(): Promise<string[]> {
     try {
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon?limit=${K}`
@@ -38,6 +38,7 @@ export const App: React.FC = () => {
       const allPokemonNames = data.results.map((pokemon) => pokemon.name);
       setPokemonNames(allPokemonNames);
       localStorage.setItem("pokemonNames", JSON.stringify(allPokemonNames));
+      return allPokemonNames;
     } catch (error) {
       console.error("Error fetching Pokémon names:", error);
       throw error;
@@ -55,19 +56,27 @@ export const App: React.FC = () => {
   }
 
   async function initiatePokemonData(){
+    console.log("entering initiatePokemonData")
     let data = localStorage.getItem("pokemonNames");
+    let allPokemonNames: string[] = [];
     if(data !== null){
+      console.log("fetching pokemon names from local storage")
       setPokemonNames(JSON.parse(data));
+      allPokemonNames = JSON.parse(data);
     }
     else{
-      await fetchFirstKPokemonNames();
+      console.log("fetching pokemon names from api")
+      allPokemonNames = await fetchFirstKPokemonNames();
     }
     data = localStorage.getItem("pokemonData");
     if(data !== null){
+      console.log("fetching pokemon data from local storage")
       setPokemonData(JSON.parse(data));
     }
     else{
-      await fetchUserPokemonData(pokemonNames);
+      console.log("fetching pokemon data from api")
+      console.log(allPokemonNames);
+      await fetchUserPokemonData(allPokemonNames);
     }
   }
 
