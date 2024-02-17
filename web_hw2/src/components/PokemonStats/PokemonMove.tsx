@@ -24,9 +24,9 @@ export const PokemonMove: React.FC<MoveProps> = ({ moveData, isUser }) => {
   };
   return (
     <div className="move">
-      <div className="move-name" onClick={handleMoveClick}>
+      <button className="move-button" onClick={handleMoveClick}>
         <p>{`${moveData.name} (${moveData.power})`}</p>
-      </div>
+      </button>
     </div>
   );
 };

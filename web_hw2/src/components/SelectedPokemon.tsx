@@ -23,6 +23,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
 }) => {
   let battleContext = React.useContext(BattleContext);
   const [movesData, setMovesData] = React.useState<MoveData[]>([]);
+  const [randomMoves, setRandomMoves] = React.useState<MoveData[]>([]);
 
   const getRandomMoves = (moves: MoveData[]): MoveData[] => {
     const randomMoves: MoveData[] = [];
@@ -54,9 +55,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
     }
   };
 
-  const randomMoves = getRandomMoves(pokemonData.moves);
-
-  const setMovesPower = async (moves: MoveData[]): Promise<void> => {
+  const fetchMovesPower = async (moves: MoveData[]): Promise<void> => {
     const promises = moves.map(async (moveData: MoveData, index) => {
       let power = await fetchMovePower(moveData);
       moves[index].power = power;
@@ -69,7 +68,9 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
       console.log("setting opponent move")
       battleContext?.setOpponentMove(chooseRandomMove(randomMoves));
     } else if (!battleContext?.userMove) {
-      setMovesPower(randomMoves);
+      const randomMoves = getRandomMoves(pokemonData.moves);
+      setRandomMoves(randomMoves);
+      fetchMovesPower(randomMoves);
     }
     return () => {
       console.log("cleanup");

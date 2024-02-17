@@ -1,6 +1,7 @@
-import React from "react";TypeRelation[]
+import React from "react";
 import { MoveData, PokemonData } from "../Types";
 
+const DELAY_WIN_TIME = 2500;
 interface GameProps {
   userMove: MoveData;
   opponentMove: MoveData;
@@ -28,8 +29,10 @@ export const Game: React.FC<GameProps> = ({
   userPokemonData,
   opponentPokemonData,
 }) => {
+
   const [userTypeFactor, setUserTypeFactor] = React.useState<number>(0);
   const [opponentTypeFactor, setOpponentTypeFactor] = React.useState<number>(0);
+  const [isWinner, setIsWinner] = React.useState<boolean | null>(null);
 
   const calculateTotalPower = (
     move: MoveData,
@@ -45,35 +48,33 @@ export const Game: React.FC<GameProps> = ({
     );
   };
 
-  const caclulateTypeFactor = (userTypeData: JSON, opponentTypeName: string) => {
-    let userTypeFactor = 1;
-    let opponentTypeFactor = 1;
+  const caclulateTypeFactors = (userDamageRelations:DamageRelations, userTypeName:string, opponentTypeName: string): { userTF: number; opponentTF: number } => {
 
-    if (
-        userTypeData.damage_relations.double_damage_from.some(
-        (type: string) => type.name === opponentTypeName
-      )
-    ) {
-        opponentTypeFactor *= 2;
-    }
+        let userTF = 1;
+        let opponentTF = 1;
+      
+        
+        if (userDamageRelations.double_damage_to.some(type => type.name === opponentTypeName)) {
+          userTF = 2;
+        } else if (userDamageRelations.half_damage_to.some(type => type.name === opponentTypeName)) {
+          userTF = 0.5;
+        } else if (userDamageRelations.no_damage_to.some(type => type.name === opponentTypeName)) {
+          userTF = 0;
+        }
+      
+        if (userDamageRelations.double_damage_from.some(type => type.name === userTypeName)) {
+          opponentTF = 2;
+        } else if (userDamageRelations.half_damage_from.some(type => type.name === userTypeName)) {
+          opponentTF = 0.5;
+        } else if (userDamageRelations.no_damage_from.some(type => type.name === userTypeName)) {
+          opponentTF = 0;
+        }
+      
+        return { userTF, opponentTF };
+      };
 
-    if (
-      defendingTypeData.damage_relations.half_damage_from.some(
-        (type) => type.name === attackingTypeData.name
-      )
-    ) {
-        opponentTypeFactor *= 0.5;
-    }
-    if (
-      defendingTypeData.damage_relations.no_damage_from.some(
-        (type) => type.name === attackingTypeData.name
-      )
-    ) {
-        opponentTypeFactor = 0;
-    }
-  };
 
-  const fetchTypeFactor = async (pokemonData: PokemonData, opponentType:string) => {
+  const fetchTypeFactors = async (pokemonData: PokemonData, opponentType:string) => {
     try {
       const response = await fetch(pokemonData.type.url);
       if (!response.ok) {
@@ -83,13 +84,16 @@ export const Game: React.FC<GameProps> = ({
       } else {
         const data = await response.json();
         const damageRelations: DamageRelations = {
-            double_damage_from: data.damage_relations.double_damage_from.map((type: any) => ({ name: type.name })),
-            double_damage_to: data.damage_relations.double_damage_to.map((type: any) => ({ name: type.name })),
-            half_damage_from: data.damage_relations.half_damage_from.map((type: any) => ({ name: type.name })),
-            half_damage_to: data.damage_relations.half_damage_to.map((type: any) => ({ name: type.name })),
-            no_damage_from: data.damage_relations.no_damage_from.map((type: any) => ({ name: type.name })),
-            no_damage_to: data.damage_relations.no_damage_to.map((type: any) => ({ name: type.name })),
+            double_damage_from: data.damage_relations.double_damage_from.map((type: TypeRelation) => ({ name: type.name })),
+            double_damage_to: data.damage_relations.double_damage_to.map((type: TypeRelation) => ({ name: type.name })),
+            half_damage_from: data.damage_relations.half_damage_from.map((type: TypeRelation) => ({ name: type.name })),
+            half_damage_to: data.damage_relations.half_damage_to.map((type: TypeRelation) => ({ name: type.name })),
+            no_damage_from: data.damage_relations.no_damage_from.map((type: TypeRelation) => ({ name: type.name })),
+            no_damage_to: data.damage_relations.no_damage_to.map((type: TypeRelation) => ({ name: type.name })),
           };
+          const {userTF, opponentTF} = caclulateTypeFactors(damageRelations, pokemonData.type.name, opponentType);
+          setUserTypeFactor(userTF);
+          setOpponentTypeFactor(opponentTF);
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
@@ -98,35 +102,56 @@ export const Game: React.FC<GameProps> = ({
   };
 
   React.useEffect(() => {
-    fetchTypeFactor(userPokemonData, true, opponentPokemonData.type.name);
+    setIsWinner(null);
+    fetchTypeFactors(userPokemonData, opponentPokemonData.type.name);
+    let userTotalPower = calculateTotalPower(
+        userMove,
+        userPokemonData,
+        opponentPokemonData.baseStats.defense,
+        true
+      );
+    let opponentTotalPower = calculateTotalPower(
+        opponentMove,
+        opponentPokemonData,
+        userPokemonData.baseStats.defense,
+        false
+    );
+    setTimeout(() => {
+        const userWins = userTotalPower >= opponentTotalPower;
+        setIsWinner(userWins);
+        if (userWins) {
+            userPokemonData.wins++;
+            opponentPokemonData.losses++;
+        } else {
+            userPokemonData.losses++;
+            opponentPokemonData.wins++;
+        }
+        console.log(userPokemonData.wins, opponentPokemonData.losses)
+    }, DELAY_WIN_TIME);
+    console.log(isWinner===null);
     return () => {
       console.log("cleanup");
     };
   }, []);
-
-  let userTotalPower = calculateTotalPower(
-    userMove,
-    userPokemonData,
-    opponentPokemonData.baseStats.defense,
-    true
-  );
-  let opponentTotalPower = calculateTotalPower(
-    opponentMove,
-    opponentPokemonData,
-    userPokemonData.baseStats.defense,
-    false
-  );
-
-  if (userTotalPower > opponentTotalPower) {
-  } else if (userTotalPower < opponentTotalPower) {
-  } else {
-  }
-
   return (
+    <>
+    {(isWinner === null) &&
     <div className="playPrompt">
       <p className="move-prompt">{`${userMove.name} >> ${userMove.power}`}</p>
       <p className="move-prompt">vs</p>
       <p className="move-prompt">{`${opponentMove.name} >> ${opponentMove.power}`}</p>
     </div>
+    }
+    {isWinner && 
+    <div className="playPrompt">
+        <p className="win-prompt">Your Pokemon Won!</p>
+        </div>
+    }
+    {isWinner === false &&
+    <div className="playPrompt">
+        <p className="loss-prompt">Your Pokemon Lost!</p>
+        </div>
+    }
+    </>
   );
 };
