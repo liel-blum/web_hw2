@@ -9,23 +9,30 @@ interface GameProps {
     opponentPokemonData: PokemonData;
 }
 
-const calculateTotalPower = (move: MoveData, pokemonData: PokemonData, defenseStat: number) => {
-    return (move.power + pokemonData.base_stats.attack)* - defenseStat;
-}
+
 
 export const Game: React.FC<GameProps> = ({ userMove, opponentMove, userPokemonData, opponentPokemonData }) => {
 
     const [userTypeFactor, setUserTypeFactor] = React.useState<number>(0);
     const [opponentTypeFactor, setOpponentTypeFactor] = React.useState<number>(0);
 
-    const fetchTypeFactor = async (pokemonData: PokemonData) => {
+    const calculateTotalPower = (move: MoveData, pokemonData: PokemonData, defenseStat: number, isUser: boolean) => {
+        let typeFactor = isUser? userTypeFactor : opponentTypeFactor;
+        return (move.power + pokemonData.baseStats.attack)*(typeFactor) - defenseStat;
+    }
+
+    const fetchTypeFactor = async (pokemonData: PokemonData, isUser: boolean) => {
         try{
           const response = await fetch(pokemonData.type.url);
           if (!response.ok) {
               throw new Error(`Error in fetching type factor for ${pokemonData.type.name}`);
           } else {
               const responseData = await response.json();
-              setUserTypeFactor(responseData.power? responseData.power : 0);
+              if (isUser) {
+                setUserTypeFactor(responseData.power? responseData.power : 0);
+              } else {
+                setOpponentTypeFactor(responseData.power? responseData.power : 0);
+              }
           }
         }
         catch(error){
@@ -35,14 +42,24 @@ export const Game: React.FC<GameProps> = ({ userMove, opponentMove, userPokemonD
     }
 
     React.useEffect(() => {
-        fetchTypeFactor(moveEntry);
+        fetchTypeFactor(userPokemonData, true);
+        fetchTypeFactor(opponentPokemonData, false);
     return () => {
         console.log("cleanup");
     };
     }, []);
 
-    let userTotalPower = calculateTotalPower(userMove, userPokemonData, opponentPokemonData.base_stats.defense);
-    let opponentTotalPower = calculateTotalPower(opponentMove, opponentPokemonData, userPokemonData.base_stats.defense);
+    let userTotalPower = calculateTotalPower(userMove, userPokemonData, opponentPokemonData.baseStats.defense, true);
+    let opponentTotalPower = calculateTotalPower(opponentMove, opponentPokemonData, userPokemonData.baseStats.defense, false);
+
+    if (userTotalPower > opponentTotalPower) {
+        
+    } else if (userTotalPower < opponentTotalPower) {
+
+    } else {
+
+    }
+
     return (
         <div className='playPrompt'>
             <p className='move-prompt'>{`${userMove.name}>>${userMove.power}`}</p>
