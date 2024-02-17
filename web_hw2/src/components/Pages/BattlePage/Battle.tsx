@@ -36,11 +36,11 @@ export const Battle: React.FC = () => {
   const [roundCounter, setRoundCounter] = React.useState<number>(1);
 
   const handlePokemonClick = (pokemon: PokemonData) => {
-    if (!pokemon.alreadyPlayed) {
+        if (!pokemon.alreadyPlayed) {
       pokemon.alreadyPlayed = true;
       setSelectedUserPokemon(pokemon);
-      const notPlayedPokemons = opponentPokemonData.filter(pokemon => !pokemon.alreadyPlayed);
-      let selectedOpponenetPokemon = notPlayedPokemons[Math.floor(Math.random() * opponentPokemonData.length)];
+            const notPlayedPokemons = opponentPokemonData.filter(pokemon => !pokemon.alreadyPlayed);
+      let selectedOpponenetPokemon = notPlayedPokemons[Math.floor(Math.random() * notPlayedPokemons.length)];
       selectedOpponenetPokemon.alreadyPlayed = true;
       setSelectedOpponentPokemon(selectedOpponenetPokemon);
     }
@@ -78,7 +78,7 @@ export const Battle: React.FC = () => {
     if (roundCounter > 3) {
       context.setPage("My Pokemon");
     }
-    else if (roundCounter==1){
+    else if (roundCounter == 1){
       fetchOpponentPokemons(allPokemonNames);
     }
     return () => {
