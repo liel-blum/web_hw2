@@ -1,3 +1,7 @@
+* {
+    font-size: 2.2vw;
+}
+
 .battle-prompt {
     display: flex;
     flex-direction: column;

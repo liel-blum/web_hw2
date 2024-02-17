@@ -1,14 +1,11 @@
-export interface MoveEntry {
+export interface MoveData {
   name: string;
   url: string;
+  power: number | null;
 }
 
 export interface MoveElement {
-  move: MoveEntry;
-}
-export interface MoveData {
-  name: string;
-  power: number;
+  move: MoveData;
 }
 
 export interface TypeEntry {
@@ -32,7 +29,7 @@ export interface PokemonData {
   height: number;
   weight: number;
   type: TypeEntry;
-  moves: MoveEntry[];
+  moves: MoveData[];
   losses: number;
   wins: number;
   baseStats: BaseStats;

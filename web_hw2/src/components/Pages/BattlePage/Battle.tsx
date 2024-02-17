@@ -6,12 +6,13 @@ import { MoveData, PokemonData } from "../../Types";
 import { fetchRandomPokemons } from "../../../utils/utils";
 import { SelectedPokemon } from "../../SelectedPokemon";
 import { Game } from "../../Game/Game";
+import "./Battle.css";
 
 
 export interface BattleContext {
     userMove: MoveData | null;
-    opponentMove: MoveData | null;
     setUserMove: (move: MoveData) => void;
+    opponentMove: MoveData | null;
     setOpponentMove: (move: MoveData) => void;
 }
 
@@ -27,10 +28,6 @@ export const Battle: React.FC = () => {
   const [selectedOpponentPokemon, setSelectedOpponentPokemon] = React.useState<PokemonData | null>(null);
   const [userMove, setUserMove] = React.useState<MoveData | null>(null);
   const [opponentMove, setOpponentMove] = React.useState<MoveData | null>(null);
-
-  // const chooseOpRandomPokemon = (opponentPokemonData: PokemonData[]) => {
-    
-  // };
 
   const handlePokemonClick = (pokemon: PokemonData) => {
     if (!pokemon.alreadyPlayed) {
@@ -53,14 +50,14 @@ export const Battle: React.FC = () => {
   }
 
   let initialContext: BattleContext = {
-    userMove: null,
-    opponentMove: null,
+    userMove: userMove,
+    opponentMove: opponentMove,
     setUserMove: (userMove: MoveData) => {
       setUserMove(userMove);
     },
     setOpponentMove: (opMove: MoveData) => {
         setOpponentMove(opMove);
-      },
+      }
   };
 
   React.useEffect(() => {
@@ -69,7 +66,6 @@ export const Battle: React.FC = () => {
       console.log("cleanup");
     };
   }, []);
-
   return (
     <BattleContext.Provider value={initialContext}>
       <Header header="Battle" />
@@ -90,7 +86,8 @@ export const Battle: React.FC = () => {
           }
           <div className="user moves">
             {selectedUserPokemon &&
-              SelectedPokemon({ pokemonData: selectedUserPokemon, isUser: true})}
+              <SelectedPokemon pokemonData={selectedUserPokemon} isUser={true} />
+            }
           </div>
         </div>
         <div className="game" >
@@ -112,7 +109,8 @@ export const Battle: React.FC = () => {
           }
           <div className="opponent moves">
             {selectedOpponentPokemon &&
-              SelectedPokemon({ pokemonData: selectedOpponentPokemon, isUser: false})}
+              <SelectedPokemon pokemonData={selectedOpponentPokemon} isUser={false} />
+            }
           </div>
         </div>
       </div>

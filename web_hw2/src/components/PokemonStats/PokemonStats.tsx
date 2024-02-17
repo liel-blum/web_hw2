@@ -1,12 +1,12 @@
 import React from 'react';
-import { MoveEntry } from '../Types';
+import { MoveData } from '../Types';
 
 interface PokemonStatsProps {
     name: string;
     height: number;
     weight: number;
     type: string;
-    moves: MoveEntry[];
+    moves: MoveData[];
     wins: number;
     losses: number;
 }

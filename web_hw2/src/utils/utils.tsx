@@ -1,7 +1,6 @@
-import { MoveElement, MoveEntry, PokemonData, TypeEntry } from "../components/Types";
+import { MoveElement, PokemonData, TypeEntry } from "../components/Types";
 
 const NUM_POKEMONS: number = 3;
-const NUM_MOVES: number = 4;
 
 export const getRandomIndex = (length: number) => {
   return Math.floor(Math.random() * length);
@@ -54,15 +53,4 @@ export const fetchRandomPokemons = async (allPokemonNames: string[]): Promise<Po
     const promises = names.map((name) => fetchPokemonData(name));
     const results = await Promise.all(promises);
     return results;
-}
-
-export const getRandomMoves = (moves: MoveEntry[]): MoveEntry[] => {
-    const randomMoves: MoveEntry[] = [];
-    while (randomMoves.length < NUM_MOVES && randomMoves.length < moves.length) {
-        const index = getRandomIndex(moves.length);
-        if (!randomMoves.includes(moves[index])) {
-            randomMoves.push(moves[index]);
-        }
-    }
-    return randomMoves;
 }
