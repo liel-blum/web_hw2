@@ -36,6 +36,7 @@ export const App: React.FC = () => {
       );
       const data: PokemonListResponse = await response.json();
       const allPokemonNames = data.results.map((pokemon) => pokemon.name);
+      localStorage.setItem("allPokemonNames", JSON.stringify(allPokemonNames));
       setPokemonNames(allPokemonNames);
       localStorage.setItem("pokemonNames", JSON.stringify(allPokemonNames));
       return allPokemonNames;

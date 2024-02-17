@@ -121,18 +121,12 @@ export const Game: React.FC<GameProps> = ({
         const userWins = userTotalPower >= opponentTotalPower;
         setIsWinner(userWins);
         if (userWins) {
+          console.log("userPokemonData wins:", userPokemonData.wins);
             userPokemonData.wins++;
             opponentPokemonData.losses++;
         } else {
             userPokemonData.losses++;
             opponentPokemonData.wins++;
-        }
-        let savedPokemonData = localStorage.getItem("pokemonData");
-        if(savedPokemonData !== null){
-            let data = JSON.parse(savedPokemonData);
-            let index = data.findIndex((pokemon: PokemonData) => pokemon.name === userPokemonData.name);
-            data[index] = userPokemonData;
-            localStorage.setItem("pokemonData", JSON.stringify(data));
         }
         setTimeout(() => {
           battleContext?.setSelectedUserPokemon(null);

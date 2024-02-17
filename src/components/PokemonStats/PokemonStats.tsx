@@ -1,5 +1,4 @@
 import React from 'react';
-import { MoveData } from '../Types';
 
 interface PokemonStatsProps {
     name: string;

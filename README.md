@@ -1,2 +1,1 @@
-# web_hw2
-Web programming HW2
+# WEB HW2
