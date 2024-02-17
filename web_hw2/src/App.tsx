@@ -37,15 +37,37 @@ export const App: React.FC = () => {
       const data: PokemonListResponse = await response.json();
       const allPokemonNames = data.results.map((pokemon) => pokemon.name);
       setPokemonNames(allPokemonNames);
-      try {
-        const results = await fetchRandomPokemons(allPokemonNames);
-        setPokemonData(results);
-      } catch (error) {
-        console.log("Error fetching pokemon  data:", error);
-      }
+      localStorage.setItem("pokemonNames", JSON.stringify(allPokemonNames));
     } catch (error) {
       console.error("Error fetching Pokémon names:", error);
       throw error;
+    }
+  }
+
+  async function fetchUserPokemonData(allPokemonNames: string[]){
+    try {
+      const results = await fetchRandomPokemons(allPokemonNames);
+      setPokemonData(results);
+      localStorage.setItem("pokemonData", JSON.stringify(results));
+    } catch (error) {
+      console.log("Error fetching pokemon  data:", error);
+    }
+  }
+
+  async function initiatePokemonData(){
+    let data = localStorage.getItem("pokemonNames");
+    if(data !== null){
+      setPokemonNames(JSON.parse(data));
+    }
+    else{
+      await fetchFirstKPokemonNames();
+    }
+    data = localStorage.getItem("pokemonData");
+    if(data !== null){
+      setPokemonData(JSON.parse(data));
+    }
+    else{
+      await fetchUserPokemonData(pokemonNames);
     }
   }
 
@@ -63,7 +85,7 @@ export const App: React.FC = () => {
   };
 
   React.useEffect(() => {
-    fetchFirstKPokemonNames();
+    initiatePokemonData();
     return () => {
       console.log("cleanup");
     };
