@@ -5,8 +5,10 @@ import { PokemonStats } from "../../PokemonStats/PokemonStats";
 import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { AppContext } from "../../../App";
 import { Button } from "../../Buttons/Button";
+
 import { PokemonData } from "../../Types";
 import "../GlobalStyles.css";
+import { UserStats } from "../../UserStats/UserStats";
 
 interface MyPokemonProps {
   handleStartOver: () => Promise<void>;
@@ -29,8 +31,12 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
   };
 
   React.useEffect(() => {
+    console.log("entered my pokemon useEffect");
     setSelectedPokemon(null);
-
+    pokemonData.forEach((data) => {
+      data.alreadyPlayed = false;
+    });
+    
   }, [pokemonData]); 
   return (
     <>
@@ -73,7 +79,7 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
             text="Let's Battle"
           />
         </div>
-        <div className="winning-bar"></div>
+       < UserStats />
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { MyPokemon } from "./components/Pages/MyPokemonPage/MyPokemon";
 import { Battle } from "./components/Pages/BattlePage/Battle";
-import { PokemonData } from "./components/Types";
+import { PokemonData, UserData } from "./components/Types";
 import { fetchRandomPokemons } from "./utils/utils";
 
 interface PokemonName {
@@ -19,7 +19,10 @@ interface AppContext {
   allPokemonNames: string[];
   page: string;
   setPage: (page: string) => void;
-  }
+  userData: UserData;
+  setUserData: (UserData: UserData) => void;
+}
+
 
 export const AppContext = React.createContext<AppContext | null>(null);
 
@@ -27,6 +30,7 @@ export const App: React.FC = () => {
   let [pokemonNames, setPokemonNames] = React.useState<string[]>([]);
   let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
   let [page, setPage] = React.useState<string>("My Pokemon");
+  let [userData, setUserData] = React.useState<UserData>({userWins: 0, userBattles: 0});
 
   const K = 386;
   async function fetchFirstKPokemonNames(): Promise<string[]> {
@@ -59,7 +63,9 @@ export const App: React.FC = () => {
   const handleStartOver = async () => {
     console.log("start over");
     localStorage.removeItem("pokemonData");
+    localStorage.removeItem("UserData");
     await initiatePokemonData();
+    initUserData();
   }
 
   async function initiatePokemonData(){
@@ -86,6 +92,18 @@ export const App: React.FC = () => {
     }
   }
 
+  function initUserData(){
+    let data = localStorage.getItem("UserData");
+    if(data === null){
+      let userData = {userWins: 0, userBattles: 0};
+      localStorage.setItem("UserData", JSON.stringify(userData));
+      setUserData(userData);
+    }
+    else{
+      setUserData(JSON.parse(data));
+    }
+  }
+
   //initial context object that will be used by provider
   let initialContext: AppContext = {
     pokemonData: pokemonData,
@@ -97,10 +115,15 @@ export const App: React.FC = () => {
     setPage: (page: string) => {
       setPage(page);
     },
-      };
+    userData: userData,
+    setUserData: (userData: UserData) => {
+      setUserData(userData);
+    },
+  };
 
   React.useEffect(() => {
     initiatePokemonData();
+    initUserData();
     return () => {
       console.log("cleanup");
     };

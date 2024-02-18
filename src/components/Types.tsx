@@ -35,3 +35,8 @@ export interface PokemonData {
   baseStats: BaseStats;
   alreadyPlayed: boolean;
 }
+
+export interface UserData{
+  userWins: number;
+  userBattles: number;
+}

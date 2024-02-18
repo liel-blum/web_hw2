@@ -144,9 +144,7 @@ export const Game: React.FC<GameProps> = ({
 
   React.useEffect(() => {
     setIsWinner(null);
-    battleContext?.setUserScore(0);
     fetchTypeFactors(userPokemonData, opponentPokemonData.type.name);
-    let userScore = 0;
     let userTotalPower = calculateTotalPower(
       userMove,
       userPokemonData,
@@ -166,7 +164,7 @@ export const Game: React.FC<GameProps> = ({
         console.log("userPokemonData wins:", userPokemonData.wins);
         userPokemonData.wins++;
         opponentPokemonData.losses++;
-        battleContext?.setUserScore(userScore + 1);
+        battleContext?.setUserScore(battleContext?.userScore + 1);
       } else {
         userPokemonData.losses++;
         opponentPokemonData.wins++;

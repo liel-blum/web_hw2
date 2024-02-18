@@ -92,12 +92,24 @@ export const Battle: React.FC = () => {
     },
   };
 
+ async function handleBattleEnd () {
+    setTimeout(() => {
+      let UserData = context.userData;
+      let userBattleResult = userScore >= 2 ? 1 : 0;
+      let updatedUserData = { userWins: UserData.userWins + userBattleResult, userBattles: UserData.userBattles + 1}
+      context.setUserData(updatedUserData);
+      localStorage.setItem("UserData", JSON.stringify(updatedUserData));
+      localStorage.setItem("pokemonData", JSON.stringify(userPokemonData));
+      context.setPage("My Pokemon");
+    }, 3000);
+  }
+
   React.useEffect(() => {
-    if (roundCounter > 3) {
-      setTimeout(() => {
-        context.setPage("My Pokemon");
-      }, 3000);
+        if (roundCounter > 3) {
+      handleBattleEnd();
     } else if (roundCounter == 1) {
+      setUserScore(0);
+      console.log("fetching opponent pokemons");
       fetchOpponentPokemons(allPokemonNames);
     }
     return () => {
