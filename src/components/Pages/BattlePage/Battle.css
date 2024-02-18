@@ -1,6 +1,3 @@
-* {
-    font-size: 2.2vw;
-}
 
 .battle-prompt {
     display: flex;
@@ -33,18 +30,4 @@
 .selected-pokemon {
     display: flex;
     flex-direction: row;
-}
-
-/* .selected-pokemon-image {
-
-} */
-
-.selected-pokemon-moves {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.move {
-    flex-basis: 50%; /* Each move takes up 50% of the container's width */
-    box-sizing: border-box; /* Ensure padding and border are included in the width */
 }

@@ -1,0 +1,39 @@
+.moves-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: stretch; /* Stretches items to fill the container vertically */
+    gap: 10px; /* Adjust gap between items */
+  }
+
+.move {
+    flex: 0 0 calc(50% - 10px); /* Do not grow or shrink, width is 50% minus half the gap */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    display: flex; /* Apply flex to center the content inside the .move div */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+
+}
+
+.move-button {
+    width: 100%;
+    height: 100%;
+    font-size: smaller;
+    background-color: #ff6666; /* Lighter shade of red */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.move-button:hover {
+    background-color: #ff9999; /* Even lighter shade of red */
+}
+
+.move-button:active {
+    background-color: #ff9999; /* Even lighter shade of red */
+}

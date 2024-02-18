@@ -6,6 +6,7 @@ import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { AppContext } from "../../../App";
 import { Button } from "../../Buttons/Button";
 import { PokemonData } from "../../Types";
+import "../GlobalStyles.css";
 
 interface MyPokemonProps {
   handleStartOver: () => Promise<void>;

@@ -4,7 +4,7 @@ import { PokemonImage } from "./PokemonStats/PokemonImage";
 import { getRandomIndex } from "../utils/utils";
 import { PokemonMove } from "./PokemonStats/PokemonMove";
 import { BattleContext } from "./Pages/BattlePage/Battle";
-import "./Pages/BattlePage/Battle.css";
+import "./SelectedPokemon.css";
 
 const NUM_MOVES: number = 4;
 
@@ -89,9 +89,11 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
           <h1>{pokemonData.name}</h1>
           <h2>Moves</h2>
           <ul>
+            <div className="moves-container">
             {movesData.map((move, index) => (
               <PokemonMove key={index} moveData={move} isUser={isUser} />
             ))}
+            </div>
           </ul>
         </div>
       </div>

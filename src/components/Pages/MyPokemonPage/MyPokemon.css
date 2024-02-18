@@ -6,14 +6,50 @@
 }
 
 .start-over-button {
-    flex-shrink: 2;
     align-self: flex-end;
+    background-color: #ffcb05;
+    color: #000;
+    border: none;
+    padding: 5px 10px; /* Updated padding */
+    font-size: 14px; /* Updated font-size */
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.battle-button {
-    flex-shrink: 2;
-    align-self: center;
+.start-over-button:hover {
+    background-color: #ffde4d;
 }
+
+.start-over-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #ffcb05;
+}
+
+.lets-battle-button {
+    align-items: center;
+    flex-grow: 2;
+    background-color: #ff6666;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.lets-battle-button:hover {
+    background-color: #ff3333;
+}
+
+.lets-battle-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #ff6666;
+}
+
 
 .pokemons {
     width:90%;

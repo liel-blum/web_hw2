@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+
+.app-header {
+  font-family: 'Pokemon Solid', sans-serif;
+  font-weight: 800;
+  font-size: 2em;
+  color: #ffcb05; 
+  text-shadow: 
+    3px 3px 0px #003A70, /* Blue shadow to create depth, similar to Pokémon logo */
+    5px 5px 0px #3D7DCA, /* Lighter blue for 3D effect */
+    6px 6px 0px rgba(0,0,0,0.15); /* Soft black shadow for more depth */
+  -webkit-text-stroke: 1px black; /* Black outline for the letters */
+  text-transform: uppercase; /* Uppercase text */
+  display: inline-block; /* To apply the shadows effectively */
+}
+
+body {
+  font-family: 'Roboto', 'calibri';
+  background-color: #f5f6fa;
+  color: #2f3542;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
