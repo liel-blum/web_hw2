@@ -8,17 +8,19 @@ import { SelectedPokemon } from "../../SelectedPokemon";
 import { Game } from "../../Game/Game";
 import "./Battle.css";
 
-
 export interface BattleContext {
-    selectedUserPokemon: PokemonData | null;
-    setSelectedUserPokemon: (pokemon: PokemonData | null) => void;
-    selectedOpponentPokemon: PokemonData | null;
-    setSelectedOpponentPokemon: (pokemon: PokemonData | null) => void;
-    userMove: MoveData | null;
-    setUserMove: (move: MoveData | null) => void;
-    opponentMove: MoveData | null;
-    setOpponentMove: (move: MoveData | null) => void;
-
+  selectedUserPokemon: PokemonData | null;
+  setSelectedUserPokemon: (pokemon: PokemonData | null) => void;
+  selectedOpponentPokemon: PokemonData | null;
+  setSelectedOpponentPokemon: (pokemon: PokemonData | null) => void;
+  userMove: MoveData | null;
+  setUserMove: (move: MoveData | null) => void;
+  opponentMove: MoveData | null;
+  setOpponentMove: (move: MoveData | null) => void;
+  roundCounter: number;
+  setRoundCounter: (round: number) => void;
+  userScore: number;
+  setUserScore: (score: number) => void;
 }
 
 export const BattleContext = React.createContext<BattleContext | null>(null);
@@ -28,19 +30,27 @@ export const Battle: React.FC = () => {
   const userPokemonData: PokemonData[] = context.pokemonData;
   const allPokemonNames: string[] = context.allPokemonNames;
 
-  const [opponentPokemonData, setOpponentPokemonData] = React.useState<PokemonData[]>([]);
-  const [selectedUserPokemon, setSelectedUserPokemon] = React.useState<PokemonData | null>(null);
-  const [selectedOpponentPokemon, setSelectedOpponentPokemon] = React.useState<PokemonData | null>(null);
+  const [opponentPokemonData, setOpponentPokemonData] = React.useState<
+    PokemonData[]
+  >([]);
+  const [selectedUserPokemon, setSelectedUserPokemon] =
+    React.useState<PokemonData | null>(null);
+  const [selectedOpponentPokemon, setSelectedOpponentPokemon] =
+    React.useState<PokemonData | null>(null);
   const [userMove, setUserMove] = React.useState<MoveData | null>(null);
   const [opponentMove, setOpponentMove] = React.useState<MoveData | null>(null);
   const [roundCounter, setRoundCounter] = React.useState<number>(1);
+  const [userScore, setUserScore] = React.useState<number>(0);
 
   const handlePokemonClick = (pokemon: PokemonData) => {
-        if (!pokemon.alreadyPlayed) {
+    if (!pokemon.alreadyPlayed) {
       pokemon.alreadyPlayed = true;
       setSelectedUserPokemon(pokemon);
-            const notPlayedPokemons = opponentPokemonData.filter(pokemon => !pokemon.alreadyPlayed);
-      let selectedOpponenetPokemon = notPlayedPokemons[Math.floor(Math.random() * notPlayedPokemons.length)];
+      const notPlayedPokemons = opponentPokemonData.filter(
+        (pokemon) => !pokemon.alreadyPlayed
+      );
+      let selectedOpponenetPokemon =
+        notPlayedPokemons[Math.floor(Math.random() * notPlayedPokemons.length)];
       selectedOpponenetPokemon.alreadyPlayed = true;
       setSelectedOpponentPokemon(selectedOpponenetPokemon);
     }
@@ -70,15 +80,24 @@ export const Battle: React.FC = () => {
       setUserMove(userMove);
     },
     setOpponentMove: (opMove: MoveData | null) => {
-        setOpponentMove(opMove);
-      }
+      setOpponentMove(opMove);
+    },
+    roundCounter: roundCounter,
+    setRoundCounter: (round: number) => {
+      setRoundCounter(round);
+    },
+    userScore: userScore,
+    setUserScore: (score: number) => {
+      setUserScore(score);
+    },
   };
 
   React.useEffect(() => {
     if (roundCounter > 3) {
-      context.setPage("My Pokemon");
-    }
-    else if (roundCounter == 1){
+      setTimeout(() => {
+        context.setPage("My Pokemon");
+      }, 3000);
+    } else if (roundCounter == 1) {
       fetchOpponentPokemons(allPokemonNames);
     }
     return () => {
@@ -89,9 +108,9 @@ export const Battle: React.FC = () => {
     <BattleContext.Provider value={initialContext}>
       <Header header="Battle" />
       <div className="battle-prompt">
-        <h1>{roundCounter}</h1>
+        { roundCounter<= 3 && <h1>{`Round ${roundCounter}`}</h1>}
         <div className="user">
-          {!selectedUserPokemon && 
+          {!selectedUserPokemon && (
             <div className="user pokemons">
               {userPokemonData.map((data, index) => (
                 <PokemonImage
@@ -103,19 +122,43 @@ export const Battle: React.FC = () => {
                 />
               ))}
             </div>
-          }
+          )}
           <div className="user moves">
-            {selectedUserPokemon &&
-              <SelectedPokemon pokemonData={selectedUserPokemon} isUser={true} />
-            }
+            {selectedUserPokemon && (
+              <SelectedPokemon
+                pokemonData={selectedUserPokemon}
+                isUser={true}
+              />
+            )}
           </div>
         </div>
-        <div className="game" >
-          {userMove && opponentMove && selectedUserPokemon && selectedOpponentPokemon &&
-          <Game userMove={userMove} opponentMove={opponentMove} userPokemonData={selectedUserPokemon} opponentPokemonData={selectedOpponentPokemon} roundCounter={roundCounter} setRoundCounter={setRoundCounter}/>}
-        </div>
+        {roundCounter <= 3 && (
+          <div className="game">
+            {userMove &&
+              opponentMove &&
+              selectedUserPokemon &&
+              selectedOpponentPokemon && (
+                <Game
+                  userMove={userMove}
+                  opponentMove={opponentMove}
+                  userPokemonData={selectedUserPokemon}
+                  opponentPokemonData={selectedOpponentPokemon}
+                />
+              )}
+          </div>
+        )}
+        {roundCounter > 3 && 
+          <div className="result">
+            {userScore >= 2 && (
+              <p className="win-prompt">You Won the Battle!</p>
+            )}
+            {userScore < 2 && (
+              <p className="loss-prompt">You Lost the Battle!</p>
+            )}
+          </div>
+        }
         <div className="opponent">
-          {!selectedOpponentPokemon && 
+          {!selectedOpponentPokemon && (
             <div className="opponent pokemons">
               {opponentPokemonData.map((data, index) => (
                 <PokemonImage
@@ -126,11 +169,14 @@ export const Battle: React.FC = () => {
                 />
               ))}
             </div>
-          }
+          )}
           <div className="opponent moves">
-            {selectedOpponentPokemon &&
-              <SelectedPokemon pokemonData={selectedOpponentPokemon} isUser={false} />
-            }
+            {selectedOpponentPokemon && (
+              <SelectedPokemon
+                pokemonData={selectedOpponentPokemon}
+                isUser={false}
+              />
+            )}
           </div>
         </div>
       </div>

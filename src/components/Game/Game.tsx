@@ -8,31 +8,26 @@ interface GameProps {
   opponentMove: MoveData;
   userPokemonData: PokemonData;
   opponentPokemonData: PokemonData;
-  roundCounter: number;
-  setRoundCounter: (round: number) => void;
 }
 
 interface TypeRelation {
-    name: string;
-  }
+  name: string;
+}
 
 interface DamageRelations {
-    double_damage_from: TypeRelation[];
-    double_damage_to: TypeRelation[];
-    half_damage_from: TypeRelation[];
-    half_damage_to: TypeRelation[];
-    no_damage_from: TypeRelation[];
-    no_damage_to: TypeRelation[];
-  }
-
+  double_damage_from: TypeRelation[];
+  double_damage_to: TypeRelation[];
+  half_damage_from: TypeRelation[];
+  half_damage_to: TypeRelation[];
+  no_damage_from: TypeRelation[];
+  no_damage_to: TypeRelation[];
+}
 
 export const Game: React.FC<GameProps> = ({
   userMove,
   opponentMove,
   userPokemonData,
   opponentPokemonData,
-  roundCounter,
-  setRoundCounter,
 }) => {
   let battleContext = React.useContext(BattleContext);
   const [userTypeFactor, setUserTypeFactor] = React.useState<number>(0);
@@ -53,29 +48,58 @@ export const Game: React.FC<GameProps> = ({
     );
   };
 
-  const caclulateTypeFactors = (userDamageRelations:DamageRelations, userTypeName:string, opponentTypeName: string): { userTF: number; opponentTF: number } => {
+  const caclulateTypeFactors = (
+    userDamageRelations: DamageRelations,
+    userTypeName: string,
+    opponentTypeName: string
+  ): { userTF: number; opponentTF: number } => {
+    let userTF = 1;
+    let opponentTF = 1;
+    if (
+      userDamageRelations.double_damage_to.some(
+        (type) => type.name === opponentTypeName
+      )
+    ) {
+      userTF = 2;
+    } else if (
+      userDamageRelations.half_damage_to.some(
+        (type) => type.name === opponentTypeName
+      )
+    ) {
+      userTF = 0.5;
+    } else if (
+      userDamageRelations.no_damage_to.some(
+        (type) => type.name === opponentTypeName
+      )
+    ) {
+      userTF = 0;
+    }
+    if (
+      userDamageRelations.double_damage_from.some(
+        (type) => type.name === userTypeName
+      )
+    ) {
+      opponentTF = 2;
+    } else if (
+      userDamageRelations.half_damage_from.some(
+        (type) => type.name === userTypeName
+      )
+    ) {
+      opponentTF = 0.5;
+    } else if (
+      userDamageRelations.no_damage_from.some(
+        (type) => type.name === userTypeName
+      )
+    ) {
+      opponentTF = 0;
+    }
+    return { userTF, opponentTF };
+  };
 
-        let userTF = 1;
-        let opponentTF = 1;
-        if (userDamageRelations.double_damage_to.some(type => type.name === opponentTypeName)) {
-          userTF = 2;
-        } else if (userDamageRelations.half_damage_to.some(type => type.name === opponentTypeName)) {
-          userTF = 0.5;
-        } else if (userDamageRelations.no_damage_to.some(type => type.name === opponentTypeName)) {
-          userTF = 0;
-        }
-        if (userDamageRelations.double_damage_from.some(type => type.name === userTypeName)) {
-          opponentTF = 2;
-        } else if (userDamageRelations.half_damage_from.some(type => type.name === userTypeName)) {
-          opponentTF = 0.5;
-        } else if (userDamageRelations.no_damage_from.some(type => type.name === userTypeName)) {
-          opponentTF = 0;
-        }
-        return { userTF, opponentTF };
-      };
-
-
-  const fetchTypeFactors = async (pokemonData: PokemonData, opponentType:string) => {
+  const fetchTypeFactors = async (
+    pokemonData: PokemonData,
+    opponentType: string
+  ) => {
     try {
       const response = await fetch(pokemonData.type.url);
       if (!response.ok) {
@@ -85,16 +109,32 @@ export const Game: React.FC<GameProps> = ({
       } else {
         const data = await response.json();
         const damageRelations: DamageRelations = {
-            double_damage_from: data.damage_relations.double_damage_from.map((type: TypeRelation) => ({ name: type.name })),
-            double_damage_to: data.damage_relations.double_damage_to.map((type: TypeRelation) => ({ name: type.name })),
-            half_damage_from: data.damage_relations.half_damage_from.map((type: TypeRelation) => ({ name: type.name })),
-            half_damage_to: data.damage_relations.half_damage_to.map((type: TypeRelation) => ({ name: type.name })),
-            no_damage_from: data.damage_relations.no_damage_from.map((type: TypeRelation) => ({ name: type.name })),
-            no_damage_to: data.damage_relations.no_damage_to.map((type: TypeRelation) => ({ name: type.name })),
-          };
-          const {userTF, opponentTF} = caclulateTypeFactors(damageRelations, pokemonData.type.name, opponentType);
-          setUserTypeFactor(userTF);
-          setOpponentTypeFactor(opponentTF);
+          double_damage_from: data.damage_relations.double_damage_from.map(
+            (type: TypeRelation) => ({ name: type.name })
+          ),
+          double_damage_to: data.damage_relations.double_damage_to.map(
+            (type: TypeRelation) => ({ name: type.name })
+          ),
+          half_damage_from: data.damage_relations.half_damage_from.map(
+            (type: TypeRelation) => ({ name: type.name })
+          ),
+          half_damage_to: data.damage_relations.half_damage_to.map(
+            (type: TypeRelation) => ({ name: type.name })
+          ),
+          no_damage_from: data.damage_relations.no_damage_from.map(
+            (type: TypeRelation) => ({ name: type.name })
+          ),
+          no_damage_to: data.damage_relations.no_damage_to.map(
+            (type: TypeRelation) => ({ name: type.name })
+          ),
+        };
+        const { userTF, opponentTF } = caclulateTypeFactors(
+          damageRelations,
+          pokemonData.type.name,
+          opponentType
+        );
+        setUserTypeFactor(userTF);
+        setOpponentTypeFactor(opponentTF);
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
@@ -104,36 +144,39 @@ export const Game: React.FC<GameProps> = ({
 
   React.useEffect(() => {
     setIsWinner(null);
+    battleContext?.setUserScore(0);
     fetchTypeFactors(userPokemonData, opponentPokemonData.type.name);
+    let userScore = 0;
     let userTotalPower = calculateTotalPower(
-        userMove,
-        userPokemonData,
-        opponentPokemonData.baseStats.defense,
-        true
-      );
+      userMove,
+      userPokemonData,
+      opponentPokemonData.baseStats.defense,
+      true
+    );
     let opponentTotalPower = calculateTotalPower(
-        opponentMove,
-        opponentPokemonData,
-        userPokemonData.baseStats.defense,
-        false
+      opponentMove,
+      opponentPokemonData,
+      userPokemonData.baseStats.defense,
+      false
     );
     setTimeout(() => {
-        const userWins = userTotalPower >= opponentTotalPower;
-        setIsWinner(userWins);
-        if (userWins) {
-          console.log("userPokemonData wins:", userPokemonData.wins);
-            userPokemonData.wins++;
-            opponentPokemonData.losses++;
-        } else {
-            userPokemonData.losses++;
-            opponentPokemonData.wins++;
-        }
-        setTimeout(() => {
-          battleContext?.setSelectedUserPokemon(null);
-          battleContext?.setSelectedOpponentPokemon(null);
-          battleContext?.setUserMove(null);
-          battleContext?.setOpponentMove(null);
-          setRoundCounter(roundCounter + 1);
+      const userWins = userTotalPower >= opponentTotalPower;
+      setIsWinner(userWins);
+      if (userWins) {
+        console.log("userPokemonData wins:", userPokemonData.wins);
+        userPokemonData.wins++;
+        opponentPokemonData.losses++;
+        battleContext?.setUserScore(userScore + 1);
+      } else {
+        userPokemonData.losses++;
+        opponentPokemonData.wins++;
+      }
+      setTimeout(() => {
+        battleContext?.setSelectedUserPokemon(null);
+        battleContext?.setSelectedOpponentPokemon(null);
+        battleContext?.setUserMove(null);
+        battleContext?.setOpponentMove(null);
+        battleContext?.setRoundCounter(battleContext?.roundCounter + 1);
       }, DELAY_WIN_TIME);
     }, DELAY_WIN_TIME);
     return () => {
@@ -142,23 +185,23 @@ export const Game: React.FC<GameProps> = ({
   }, []);
   return (
     <>
-    {(isWinner === null) &&
-    <div className="playPrompt">
-      <p className="move-prompt">{`${userMove.name} >> ${userMove.power}`}</p>
-      <p className="move-prompt">vs</p>
-      <p className="move-prompt">{`${opponentMove.name} >> ${opponentMove.power}`}</p>
-    </div>
-    }
-    {isWinner && 
-    <div className="playPrompt">
-        <p className="win-prompt">Your Pokemon Won!</p>
+      {isWinner === null && (
+        <div className="playPrompt">
+          <p className="move-prompt">{`${userMove.name} >> ${userMove.power}`}</p>
+          <p className="move-prompt">vs</p>
+          <p className="move-prompt">{`${opponentMove.name} >> ${opponentMove.power}`}</p>
         </div>
-    }
-    {isWinner === false &&
-    <div className="playPrompt">
-        <p className="loss-prompt">Your Pokemon Lost!</p>
+      )}
+      {isWinner && (
+        <div className="playPrompt">
+          <p className="win-prompt">Your Pokemon Won!</p>
         </div>
-    }
+      )}
+      {isWinner === false && (
+        <div className="playPrompt">
+          <p className="loss-prompt">Your Pokemon Lost!</p>
+        </div>
+      )}
     </>
   );
 };
