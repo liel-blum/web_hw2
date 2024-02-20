@@ -1,26 +1,34 @@
 import React from 'react';
+import { PokemonData } from '../Types';
+import './PokemonStats.css';
 
 interface PokemonStatsProps {
-    name: string;
-    height: number;
-    weight: number;
-    type: string;
-    wins: number;
-    losses: number;
+    pokemonData: PokemonData;
 }
 
-export const PokemonStats: React.FC<PokemonStatsProps> = ({ name, height, weight, type, wins, losses}) => {
+export const PokemonStats: React.FC<PokemonStatsProps> = ({ pokemonData }) => {
     return (
-        <div className="pokemon-stats" key={name}>
-            <div className="stats-content">
-                <h1>{name}</h1>
-                <p>Height: {height}</p>
-                <p>Weight: {weight}</p>
-                <p>Type: {type}</p>
+        <div className="pokemon-stats" key={pokemonData.name}>
+            <div className="stats">
+                <div className="stats-content">
+                    <h1>{pokemonData.name}</h1>
+                    <p>Height: {pokemonData.height}</p>
+                    <p>Weight: {pokemonData.weight}</p>
+                    <p>Type: {pokemonData.type.name}</p>
+                </div>
+                <div className="base-stats">
+                    <h1>Stats...</h1>
+                    <p>HP: {pokemonData.baseStats.hp}</p>
+                    <p>Attack: {pokemonData.baseStats.attack}</p>
+                    <p>Defense: {pokemonData.baseStats.defense}</p>
+                    <p>Special Attack: {pokemonData.baseStats.specialAttack}</p>
+                    <p>Special Defense: {pokemonData.baseStats.specialDefense}</p>
+                    <p>Speed: {pokemonData.baseStats.speed}</p>
+                </div>
             </div>
             <div className="win-stats">
-            <p>Wins: {wins}</p>
-            <p>Losses: {losses}</p>
+            <p>Wins: {pokemonData.wins}</p>
+            <p>Losses: {pokemonData.losses}</p>
             </div>
         </div>
     );

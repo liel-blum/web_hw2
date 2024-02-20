@@ -130,6 +130,8 @@ export const Battle: React.FC = () => {
                   name={data.name}
                   spriteUrl={data.spriteUrl}
                   showName={true}
+                  alreadyPlayed={data.alreadyPlayed}
+                  isUser={true}
                   onClick={() => handlePokemonClick(data)}
                 />
               ))}
@@ -178,6 +180,7 @@ export const Battle: React.FC = () => {
                   name={data.name}
                   spriteUrl={data.spriteUrl}
                   showName={true}
+                  isUser={false}  
                 />
               ))}
             </div>

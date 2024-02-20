@@ -53,6 +53,7 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
                         key={index}
                         name={data.name}
                         spriteUrl={data.spriteUrl}
+                        isUser={true} 
                         onClick={() => handlePokemonClick(data)}
                         />
                     ))}
@@ -62,12 +63,7 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
                 <div className="pokemon-stats">
                 {selectedPokemon && (
                     <PokemonStats
-                    name={selectedPokemon.name}
-                    height={selectedPokemon.height}
-                    weight={selectedPokemon.weight}
-                    type={selectedPokemon.type.name}
-                    wins={selectedPokemon.wins}
-                    losses={selectedPokemon.losses}
+                    pokemonData={selectedPokemon}
                     />
                 )}
                 </div>

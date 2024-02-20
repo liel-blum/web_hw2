@@ -82,6 +82,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
         <PokemonImage
           name={pokemonData.name}
           spriteUrl={pokemonData.spriteUrl}
+          isUser={isUser} 
         />
       </div>
       <div className="selected-pokemon-moves">

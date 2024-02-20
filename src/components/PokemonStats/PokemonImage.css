@@ -4,4 +4,13 @@
     cursor: pointer;
     width:auto;
     height: 100%;
+    background-color: white;
+    border-radius: 20%;
+    border-width: 0cap;
+    border-color: black;
+    border: 2px solid #3C8D5A;
+}
+
+.pokemon-image .alreadyPlayed {
+    border: 2px solid red;
 }
