@@ -138,7 +138,6 @@ export const Game: React.FC<GameProps> = ({
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
-      throw error;
     }
   };
 

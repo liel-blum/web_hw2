@@ -46,7 +46,7 @@ export const App: React.FC = () => {
       return allPokemonNames;
     } catch (error) {
       console.error("Error fetching Pokémon names:", error);
-      throw error;
+      return [];
     }
   }
 

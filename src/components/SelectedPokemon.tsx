@@ -51,7 +51,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
-      throw error;
+      return -1;
     }
   };
 
