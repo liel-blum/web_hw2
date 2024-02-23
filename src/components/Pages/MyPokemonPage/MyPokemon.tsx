@@ -59,15 +59,14 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
                     ))}
                 </div>
             </div>
-            <div className="pokemons-right">
-                <div className="pokemon-stats">
+            <div className="vertical-line"></div>
+            <div className="pokemon-right">
                 {selectedPokemon && (
                     <PokemonStats
                     pokemonData={selectedPokemon}
                     />
                 )}
-                </div>
-            </div>
+              </div>
         </div>
         <div className="battle-button">
           <Button

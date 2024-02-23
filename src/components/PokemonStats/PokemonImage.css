@@ -1,5 +1,7 @@
 .pokemon-image {
-    flex: 1;
+    flex: 4;
+    align-self: center;
+    cursor: pointer;
     align-self: center;
     cursor: pointer;
     width:auto;
