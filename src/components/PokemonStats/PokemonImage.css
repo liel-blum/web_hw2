@@ -1,11 +1,7 @@
 .pokemon-image {
-    flex: 4;
-    align-self: center;
-    cursor: pointer;
-    align-self: center;
-    cursor: pointer;
-    width:auto;
-    height: 100%;
+    width: 150px; /* Set a width relative to the parent container */
+    height: 150px; /* Set a fixed height for the image container */
+    margin-bottom: 10px; /* Add some bottom margin between images */
     background-color: white;
     border-radius: 20%;
     border-width: 0cap;
@@ -15,4 +11,10 @@
 
 .pokemon-image .alreadyPlayed {
     border: 2px solid red;
+}
+
+.pokemon-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Resize image to fit inside the container */
 }

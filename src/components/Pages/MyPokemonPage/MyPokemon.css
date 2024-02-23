@@ -74,10 +74,9 @@
 
 .pokemon-images {
     display: flex;
-    flex-direction: column;
-    align-items: center; /* This centers the items horizontally in the container */
-    justify-content: space-around; /* This evenly spaces the items vertically */
-    /* You can add additional styling as needed, like padding or margins */
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: space-around;;
 }
 
 

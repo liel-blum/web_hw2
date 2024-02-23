@@ -26,7 +26,7 @@ const fetchPokemonData = async (name: string): Promise<PokemonData> => {
     const responseData = await response.json();
     return {
       name: responseData.name,
-      spriteUrl: responseData.sprites.front_default,
+      spriteUrl: responseData.sprites.other["dream_world"]["front_default"],
       height: responseData.height,
       weight: responseData.weight,
       type: responseData.types[0].type as TypeEntry,
