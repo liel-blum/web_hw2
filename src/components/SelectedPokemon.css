@@ -1,3 +1,21 @@
+.selected-pokemon {
+    display: flex;
+    align-items: center;    
+    justify-content: center; 
+  }
+
+.selected-pokemon.user {
+    flex-direction: row; 
+  }
+
+.selected-pokemon.opponent {
+    flex-direction: row-reverse; 
+}
+  
+.selected-pokemon-moves {
+    margin: 0 20px; 
+}
+
 .moves-container {
     display: flex;
     flex-wrap: wrap;
@@ -12,7 +30,6 @@
     display: flex; /* Apply flex to center the content inside the .move div */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-
 }
 
 .move-button {
@@ -31,9 +48,10 @@
 }
 
 .move-button:hover {
-    background-color: #ff9999; /* Even lighter shade of red */
+    background-color: #ff9999; 
 }
 
 .move-button:active {
-    background-color: #ff9999; /* Even lighter shade of red */
+    background-color: #ff9999; 
 }
+

@@ -190,6 +190,7 @@ export const Battle: React.FC = () => {
                   name={data.name}
                   spriteUrl={data.spriteUrl}
                   showName={true}
+                  alreadyPlayed={data.alreadyPlayed}
                   isUser={false}  
                 />
               ))}

@@ -68,6 +68,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
       console.error("Error fetching move power:", error);
     }
   };
+  const className = isUser ? "user" : "opponent";
   React.useEffect(() => {
     battleContext?.setLoading(true);
     if (!isUser && battleContext?.userMove) {
@@ -84,7 +85,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
     };
   }, [battleContext?.userMove]);
   return (
-    <div className="selected-pokemon">
+    <div className={`selected-pokemon ${className}`}>
       <div className="selected-pokemon-image">
         <PokemonImage
           name={pokemonData.name}

@@ -80,12 +80,6 @@
 }
 
 
-
-.pokemon-image:hover:not(.alreadyPlayed) {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-
 .vertical-line {
     border-left: 2px solid rgb(61, 92, 0); /* Define the appearance of the vertical line */
     margin-left: 20px; /* Adjust margin as needed */
