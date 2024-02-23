@@ -101,6 +101,7 @@ export const Game: React.FC<GameProps> = ({
     opponentType: string
   ) => {
     try {
+      battleContext?.setLoading(true);
       const response = await fetch(pokemonData.type.url);
       if (!response.ok) {
         throw new Error(
@@ -138,6 +139,9 @@ export const Game: React.FC<GameProps> = ({
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
+    }
+    finally{
+      battleContext?.setLoading(false);
     }
   };
 

@@ -21,6 +21,8 @@ export interface BattleContext {
   setRoundCounter: (round: number) => void;
   userScore: number;
   setUserScore: (score: number) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }
 
 export const BattleContext = React.createContext<BattleContext | null>(null);
@@ -58,10 +60,14 @@ export const Battle: React.FC = () => {
 
   async function fetchOpponentPokemons(allPokemonNames: string[]) {
     try {
+      context.setLoading(true);
       const results = await fetchRandomPokemons(allPokemonNames);
       setOpponentPokemonData(results);
     } catch (error) {
       console.log("Error fetching opponent pokemon data:", error);
+    }
+    finally {
+    context.setLoading(false);
     }
   }
 
@@ -89,6 +95,10 @@ export const Battle: React.FC = () => {
     userScore: userScore,
     setUserScore: (score: number) => {
       setUserScore(score);
+    },
+    loading: context.loading,
+    setLoading: (loading: boolean) => {
+      context.setLoading(loading);
     },
   };
 

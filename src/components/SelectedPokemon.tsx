@@ -56,14 +56,20 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
   };
 
   const fetchMovesPower = async (moves: MoveData[]): Promise<void> => {
-    const promises = moves.map(async (moveData: MoveData, index) => {
-      let power = await fetchMovePower(moveData);
-      moves[index].power = power;
-    });
-    await Promise.all(promises);
-    setMovesData(moves);
+    try{
+      const promises = moves.map(async (moveData: MoveData, index) => {
+        let power = await fetchMovePower(moveData);
+        moves[index].power = power;
+      });
+      await Promise.all(promises);
+      setMovesData(moves);
+    }
+    catch (error) {
+      console.error("Error fetching move power:", error);
+    }
   };
   React.useEffect(() => {
+    battleContext?.setLoading(true);
     if (!isUser && battleContext?.userMove) {
       console.log("setting opponent move")
       battleContext?.setOpponentMove(chooseRandomMove(randomMoves));
@@ -72,6 +78,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
       setRandomMoves(randomMoves);
       fetchMovesPower(randomMoves);
     }
+    battleContext?.setLoading(false);
     return () => {
       console.log("cleanup");
     };

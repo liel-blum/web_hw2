@@ -4,6 +4,7 @@ import { MyPokemon } from "./components/Pages/MyPokemonPage/MyPokemon";
 import { Battle } from "./components/Pages/BattlePage/Battle";
 import { PokemonData, UserData } from "./components/Types";
 import { fetchRandomPokemons } from "./utils/utils";
+import { Loader } from "./components/Loader/Loader";
 
 interface PokemonName {
   name: string;
@@ -21,6 +22,8 @@ interface AppContext {
   setPage: (page: string) => void;
   userData: UserData;
   setUserData: (UserData: UserData) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }
 
 
@@ -31,9 +34,11 @@ export const App: React.FC = () => {
   let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
   let [page, setPage] = React.useState<string>("My Pokemon");
   let [userData, setUserData] = React.useState<UserData>({userWins: 0, userBattles: 0});
+  let [Loading, setLoading] = React.useState<boolean>(false);
 
   const K = 386;
   async function fetchFirstKPokemonNames(): Promise<string[]> {
+    setLoading(true);
     try {
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon?limit=${K}`
@@ -48,15 +53,22 @@ export const App: React.FC = () => {
       console.error("Error fetching Pokémon names:", error);
       return [];
     }
+    finally{
+      setLoading(false);
+    }
   }
 
   async function fetchUserPokemonData(allPokemonNames: string[]){
     try {
+      setLoading(true);
       const results = await fetchRandomPokemons(allPokemonNames);
       setPokemonData(results);
       localStorage.setItem("pokemonData", JSON.stringify(results));
     } catch (error) {
       console.log("Error fetching pokemon  data:", error);
+    }
+    finally{
+      setLoading(false);
     }
   }
 
@@ -119,6 +131,10 @@ export const App: React.FC = () => {
     setUserData: (userData: UserData) => {
       setUserData(userData);
     },
+    loading: Loading,
+    setLoading: (loading: boolean) => {
+      setLoading(loading);
+    }
   };
 
   React.useEffect(() => {
@@ -131,6 +147,7 @@ export const App: React.FC = () => {
 
   return (
     <AppContext.Provider value={initialContext}>
+      {Loading &&  <Loader/>}
       {page === "My Pokemon" && <MyPokemon handleStartOver={handleStartOver} />}
       {page === "Battle" && <Battle />}
     </AppContext.Provider>
