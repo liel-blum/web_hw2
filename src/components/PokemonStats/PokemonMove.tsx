@@ -22,9 +22,10 @@ export const PokemonMove: React.FC<MoveProps> = ({ moveData, isUser }) => {
       console.log(context);
     }
   };
+  const className = isUser ? "user move-button" : "opponent move-button";
   return (
     <div className="move">
-      <button className="move-button" onClick={handleMoveClick}>
+      <button className={className} onClick={handleMoveClick}>
         <p>{`${moveData.name} (${moveData.power})`}</p>
       </button>
     </div>
