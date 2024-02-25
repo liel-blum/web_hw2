@@ -96,7 +96,6 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
       <div className="selected-pokemon-moves">
         <div>
           <h1>{pokemonData.name}</h1>
-          <h2>Moves</h2>
           <ul>
             <div className="moves-container">
             {movesData.map((move, index) => (

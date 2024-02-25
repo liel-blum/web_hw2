@@ -16,12 +16,16 @@
     margin: 0 20px; 
 }
 
+.selected-pokemon-moves h1 {
+    margin: 0;
+} 
+
 .moves-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: stretch; /* Stretches items to fill the container vertically */
-    gap: 10px; /* Adjust gap between items */
+    gap: 5px; /* Adjust gap between items */
   }
 
 .move {
@@ -41,17 +45,20 @@
     border: none;
     border-radius: 5px;
     padding: 10px;
-    cursor: pointer;
     text-transform: uppercase;
     font-weight: bold;
     transition: background-color 0.3s ease;
 }
 
-.move-button:hover {
+.user.move-button {
+    cursor: pointer;
+}
+
+.user.move-button:hover {
     background-color: #ff9999; 
 }
 
-.move-button:active {
+.user.move-button:active {
     background-color: #ff9999; 
 }
 
