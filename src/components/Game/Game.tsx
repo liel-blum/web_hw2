@@ -101,7 +101,7 @@ export const Game: React.FC<GameProps> = ({
     opponentType: string
   ) => {
     try {
-      battleContext?.setLoading(true);
+      battleContext?.setLoading(false);
       const response = await fetch(pokemonData.type.url);
       if (!response.ok) {
         throw new Error(
