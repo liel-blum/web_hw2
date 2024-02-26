@@ -50,7 +50,6 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
         throw new Error(`Error in fetching move data for ${move.name}`);
       } else {
         const responseData = await response.json();
-        console.log("finished fetchMovePower");
         return responseData.power ? responseData.power : 0;
       }
     } catch (error) {
@@ -78,7 +77,6 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
 
   React.useEffect(() => {
     if (!isUser && battleContext?.userMove) {
-      console.log("setting opponent move")
       battleContext?.setOpponentMove(chooseRandomMove(randomMoves));
     } else if (!battleContext?.userMove) {
       const randomMoves = getRandomMoves(pokemonData.moves);
