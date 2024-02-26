@@ -1,11 +1,12 @@
 import React from "react";
 import { Header } from "../../Header/Header";
 import { AppContext } from "../../../App";
-import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { MoveData, PokemonData } from "../../Types";
 import { fetchRandomPokemons } from "../../../utils/utils";
-import { SelectedPokemon } from "../../SelectedPokemon/SelectedPokemon";
 import { Game } from "../../Game/Game";
+import { BattleResult } from "../../BattleResult/BattleResult";
+import { Player } from "../../Player/Player";
+
 import "./Battle.css";
 
 export interface BattleContext {
@@ -124,37 +125,10 @@ export const Battle: React.FC = () => {
       <Header header="Battle" />
       <div className="battle-prompt">
         {roundCounter <= 3 && <h1>{`Round ${roundCounter}`}</h1>}
-        <div className="user">
-          {!selectedUserPokemon && (
-            <div className="user pokemons">
-              {userPokemonData.map((data, index) => (
-                <PokemonImage
-                  key={index}
-                  name={data.name}
-                  spriteUrl={data.spriteUrl}
-                  showName={true}
-                  alreadyPlayed={data.alreadyPlayed}
-                  isUser={true}
-                  onClick={() => handlePokemonClick(data)}
-                />
-              ))}
-            </div>
-          )}
-          <div className="user moves">
-            {selectedUserPokemon && (
-              <SelectedPokemon
-                pokemonData={selectedUserPokemon}
-                isUser={true}
-              />
-            )}
-          </div>
-        </div>
+        {<Player isUser={true} selectedPokemonData={selectedUserPokemon} pokemonData={userPokemonData} onClick={handlePokemonClick}/>}
         {roundCounter <= 3 && (
           <div className="game">
-            {userMove &&
-              opponentMove &&
-              selectedUserPokemon &&
-              selectedOpponentPokemon && (
+            {userMove && opponentMove && selectedUserPokemon && selectedOpponentPokemon && (
                 <Game
                   userMove={userMove}
                   opponentMove={opponentMove}
@@ -164,44 +138,8 @@ export const Battle: React.FC = () => {
               )}
           </div>
         )}
-        {roundCounter > 3 && (
-          <div className="result">
-            {userScore >= 2 && (
-              <div className="play-prompt">
-                <p className="win-prompt">You Won the Battle!</p>
-              </div>
-            )}
-            {userScore < 2 && (
-              <div className="play-prompt">
-                <p className="loss-prompt">You Lost the Battle!</p>
-              </div>
-            )}
-          </div>
-        )}
-        <div className="opponent">
-          {!selectedOpponentPokemon && (
-            <div className="opponent pokemons">
-              {opponentPokemonData.map((data, index) => (
-                <PokemonImage
-                  key={index}
-                  name={data.name}
-                  spriteUrl={data.spriteUrl}
-                  showName={true}
-                  alreadyPlayed={data.alreadyPlayed}
-                  isUser={false}
-                />
-              ))}
-            </div>
-          )}
-          <div className="opponent moves">
-            {selectedOpponentPokemon && (
-              <SelectedPokemon
-                pokemonData={selectedOpponentPokemon}
-                isUser={false}
-              />
-            )}
-          </div>
-        </div>
+        { <BattleResult roundCounter={roundCounter} userScore={userScore} />}
+        { <Player isUser={false} selectedPokemonData={selectedOpponentPokemon} pokemonData={opponentPokemonData} />}
       </div>
     </BattleContext.Provider>
   );
