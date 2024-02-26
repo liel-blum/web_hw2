@@ -9,9 +9,9 @@ export interface MoveElement {
 }
 
 export interface TypeEntry {
-    name: string;
-    url: string;
-  }
+  name: string;
+  url: string;
+}
 
 export interface BaseStats {
   hp: number;
@@ -36,7 +36,7 @@ export interface PokemonData {
   alreadyPlayed: boolean;
 }
 
-export interface UserData{
+export interface UserData {
   userWins: number;
   userBattles: number;
 }

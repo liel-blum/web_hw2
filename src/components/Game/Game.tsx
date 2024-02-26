@@ -193,7 +193,7 @@ export const Game: React.FC<GameProps> = ({
   return (
     <>
       {isWinner === null && (
-        <div className="playPrompt">
+        <div className="play-prompt">
           <p className="move-prompt">{`${userMove.name} >> ${userTotalPower}`}</p>
           <p className="move-prompt">vs</p>
           <p className="move-prompt">{`${opponentMove.name} >> ${opponentTotalPower}`}</p>

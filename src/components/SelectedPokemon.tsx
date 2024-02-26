@@ -58,22 +58,19 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
   };
 
   const fetchMovesPower = async (moves: MoveData[]): Promise<void> => {
-    try{
+    try {
       const promises = moves.map(async (moveData: MoveData, index) => {
         let power = await fetchMovePower(moveData);
         moves[index].power = power;
       });
       await Promise.all(promises);
       setMovesData(moves);
-    }
-    catch (error) {
+    } catch (error) {
       appContext?.setErrorMessage("Error while fetching move power " + error);
-    }
-    finally {
+    } finally {
       appContext?.stopLoading();
     }
   };
-
 
   React.useEffect(() => {
     if (!isUser && battleContext?.userMove) {
@@ -83,17 +80,16 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
       setRandomMoves(randomMoves);
       fetchMovesPower(randomMoves);
     }
-    return () => {
-    };
+    return () => {};
   }, [battleContext?.userMove]);
-  
+
   return (
     <div className={`selected-pokemon ${className}`}>
       <div className="selected-pokemon-image">
         <PokemonImage
           name={pokemonData.name}
           spriteUrl={pokemonData.spriteUrl}
-          isUser={isUser} 
+          isUser={isUser}
         />
       </div>
       <div className="selected-pokemon-moves">
@@ -101,9 +97,9 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
           <h1>{pokemonData.name}</h1>
           <ul>
             <div className="moves-container">
-            { movesData.map((move, index) => (
-              <PokemonMove key={index} moveData={move} isUser={isUser} />
-            ))}
+              {movesData.map((move, index) => (
+                <PokemonMove key={index} moveData={move} isUser={isUser} />
+              ))}
             </div>
           </ul>
         </div>

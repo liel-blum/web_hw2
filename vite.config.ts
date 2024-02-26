@@ -5,4 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/web_hw2/',
   plugins: [react()],
+  //   server:{
+  //   watch:
+  //   {
+  //     usePolling: true,
+  //   }
+  // }
 })
