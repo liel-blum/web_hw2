@@ -26,7 +26,6 @@ export const PokemonImage: React.FC<PokemonImageProps> = ({
 
   let className = alreadyPlayed ? "pokemon-image already-played" : "pokemon-image";
   className += isUser ? " user" : " opponent";
-  console.log("name", name, "isUser", isUser, "alreadyPlayed", alreadyPlayed, "className", className);
   return (
     <div className="pokemon-div" >
       {showName && <p className="pokemon-name">{name}</p>}

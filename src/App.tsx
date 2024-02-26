@@ -49,7 +49,6 @@ export const App: React.FC = () => {
   }
 
   const handleStartOver = async () => {
-    console.log("start over");
     setPage("My Pokemon");
     setErrorMessage("");
     localStorage.removeItem("pokemonData");
@@ -61,10 +60,8 @@ export const App: React.FC = () => {
   async function initiatePokemonData(){
     const data = localStorage.getItem("pokemonData");
     if(data !== null){
-      console.log("fetching pokemon data from local storage")
       setPokemonData(JSON.parse(data));
     } else {
-      console.log("fetching pokemon data from api")
       await fetchUserPokemonData();
     }
   }

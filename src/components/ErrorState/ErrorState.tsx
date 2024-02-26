@@ -5,7 +5,6 @@ import { Button } from "../Buttons/Button";
 
 export const ErrorState: React.FC = () =>{
   const context = React.useContext(AppContext)!;
-  console.log("showing error state");
   return(
     <div className="error-state-container">
       <div className="error-header">

@@ -12,14 +12,11 @@ export const PokemonMove: React.FC<MoveProps> = ({ moveData, isUser }) => {
 
   const handleMoveClick = () => {
     if (isUser && !context?.userMove) {
-      console.log(moveData.name);
-      console.log("User move set");
       context?.setUserMove({
         name: moveData.name,
         url: moveData.url,
         power: moveData.power,
       });
-      console.log(context);
     }
   };
   const className = isUser ? "user move-button" : "opponent move-button";

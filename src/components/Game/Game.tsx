@@ -135,7 +135,6 @@ export const Game: React.FC<GameProps> = ({
             (type: TypeRelation) => ({ name: type.name })
           ),
         };
-        console.log("damage relations", damageRelations);
         calculateTypeFactors(
           damageRelations,
           pokemonData.type.name,
@@ -172,7 +171,6 @@ export const Game: React.FC<GameProps> = ({
         const userWins = userTotalPower >= opponentTotalPower;
         setIsWinner(userWins);
         if (userWins) {
-          console.log("userPokemonData wins:", userPokemonData.wins);
           userPokemonData.wins++;
           opponentPokemonData.losses++;
           battleContext?.setUserScore(battleContext?.userScore + 1);

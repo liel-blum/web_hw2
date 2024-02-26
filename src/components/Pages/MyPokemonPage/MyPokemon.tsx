@@ -31,7 +31,6 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
   };
 
   React.useEffect(() => {
-    console.log("entered my pokemon useEffect");
     setSelectedPokemon(null);
     pokemonData.forEach((data) => {
       data.alreadyPlayed = false;

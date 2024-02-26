@@ -114,7 +114,6 @@ export const Battle: React.FC = () => {
       handleBattleEnd();
     } else if (roundCounter == 1) {
       setUserScore(0);
-      console.log("fetching opponent pokemons");
       fetchOpponentPokemons();
     }
     return () => {
