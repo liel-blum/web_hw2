@@ -6,11 +6,14 @@ import { UserData } from "../Types";
 export const UserStats: React.FC = () => {
     let context = React.useContext(AppContext)!;
     let userData: UserData = context.userData;
+    let percentage = (userData.userWins / userData.userBattles) * 100;
   return (
     <div className="user-stats">
         {userData.userBattles === 0 ?
         <p> You haven't played yet</p>
-        : <p>You won {userData.userWins} out of {userData.userBattles} battles</p>
+        : <div className="win-container"> <p>You won {userData.userWins} out of {userData.userBattles} battles</p>
+        <p> {Math.floor(percentage)}% </p>
+        </div>
         }
     </div>
   );
