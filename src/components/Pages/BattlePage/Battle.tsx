@@ -30,7 +30,6 @@ export const BattleContext = React.createContext<BattleContext | null>(null);
 export const Battle: React.FC = () => {
   const context = React.useContext(AppContext)!;
   const userPokemonData: PokemonData[] = context.pokemonData;
-  const allPokemonNames: string[] = context.allPokemonNames;
 
   const [opponentPokemonData, setOpponentPokemonData] = React.useState<
     PokemonData[]
@@ -58,10 +57,10 @@ export const Battle: React.FC = () => {
     }
   };
 
-  async function fetchOpponentPokemons(allPokemonNames: string[]) {
+  async function fetchOpponentPokemons() {
     try {
       context.setLoading(true);
-      const results = await fetchRandomPokemons(allPokemonNames);
+      const results = await fetchRandomPokemons();
       setOpponentPokemonData(results);
     } catch (error) {
       console.log("Error fetching opponent pokemon data:", error);
@@ -120,7 +119,7 @@ export const Battle: React.FC = () => {
     } else if (roundCounter == 1) {
       setUserScore(0);
       console.log("fetching opponent pokemons");
-      fetchOpponentPokemons(allPokemonNames);
+      fetchOpponentPokemons();
     }
     return () => {
       console.log("cleanup");

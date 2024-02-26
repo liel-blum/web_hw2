@@ -1,5 +1,6 @@
 import { MoveElement, PokemonData, TypeEntry } from "../components/Types";
 
+const MAX_POKEMON_ID = 386;
 const NUM_POKEMONS: number = 3;
 
 export const getRandomIndex = (length: number) => {
@@ -7,21 +8,21 @@ export const getRandomIndex = (length: number) => {
 };
 
 // Function to get 3 random pokemons
-const getRandomNames = (names: string[]) => {
-  const randomStrings: string[] = [];
-  while (randomStrings.length < NUM_POKEMONS) {
-    const index = getRandomIndex(names.length);
-    if (!randomStrings.includes(names[index])) {
-      randomStrings.push(names[index]);
+const getRandomIds = (maxId: number) => {
+  const randomIds: number[] = [];
+  while (randomIds.length < NUM_POKEMONS) {
+    const index = getRandomIndex(maxId);
+    if (!randomIds.includes(index)) {
+      randomIds.push(index);
     }
   }
-  return randomStrings;
+  return randomIds;
 };
 
-const fetchPokemonData = async (name: string): Promise<PokemonData> => {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+const fetchPokemonData = async (id: number): Promise<PokemonData> => {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
   if (!response.ok) {
-    throw new Error(`Error in fetching data for ${name}`);
+    throw new Error(`Error in fetching data for ${id}`);
   } else {
     const responseData = await response.json();
     return {
@@ -48,9 +49,9 @@ const fetchPokemonData = async (name: string): Promise<PokemonData> => {
   }
 };
 
-export const fetchRandomPokemons = async (allPokemonNames: string[]): Promise<PokemonData[]> => {
-    const names = getRandomNames(allPokemonNames);
-    const promises = names.map((name) => fetchPokemonData(name));
+export const fetchRandomPokemons = async (): Promise<PokemonData[]> => {
+    const ids = getRandomIds(MAX_POKEMON_ID);
+    const promises = ids.map((id) => fetchPokemonData(id + 1));
     const results = await Promise.all(promises);
     return results;
 }
