@@ -28,7 +28,6 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
   const [movesData, setMovesData] = React.useState<MoveData[]>([]);
   const [randomMoves, setRandomMoves] = React.useState<MoveData[]>([]);
   const className = isUser ? "user" : "opponent";
-  let abortController = new AbortController();
 
   const getRandomMoves = (moves: MoveData[]): MoveData[] => {
     const randomMoves: MoveData[] = [];
@@ -44,9 +43,9 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
     return randomMoves;
   };
 
-  const fetchMovePower = async (move: MoveData, signal: AbortSignal): Promise<number> => {
+  const fetchMovePower = async (move: MoveData): Promise<number> => {
     try {
-      const response = await fetch(move.url, { signal });
+      const response = await fetch(move.url);
       if (!response.ok) {
         throw new Error(`Error in fetching move data for ${move.name}`);
       } else {
@@ -55,22 +54,21 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
         return responseData.power ? responseData.power : 0;
       }
     } catch (error) {
-      console.log("Error fetching move power:", error);
-      return -1;
+      throw new Error("Error while fetching move power " + error);
     }
   };
 
-  const fetchMovesPower = async (moves: MoveData[], signal: AbortSignal): Promise<void> => {
+  const fetchMovesPower = async (moves: MoveData[]): Promise<void> => {
     try{
       const promises = moves.map(async (moveData: MoveData, index) => {
-        let power = await fetchMovePower(moveData, signal);
+        let power = await fetchMovePower(moveData);
         moves[index].power = power;
       });
       await Promise.all(promises);
       setMovesData(moves);
     }
     catch (error) {
-      console.log("Error fetching move power:", error);
+      appContext?.setErrorMessage("Error while fetching move power " + error);
     }
     finally {
       appContext?.stopLoading();
@@ -85,12 +83,9 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
     } else if (!battleContext?.userMove) {
       const randomMoves = getRandomMoves(pokemonData.moves);
       setRandomMoves(randomMoves);
-      fetchMovesPower(randomMoves, abortController.signal);
+      fetchMovesPower(randomMoves);
     }
     return () => {
-      if (!battleContext?.userMove){
-        abortController.abort();
-      }
     };
   }, [battleContext?.userMove]);
   

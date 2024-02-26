@@ -5,6 +5,7 @@ import { Battle } from "./components/Pages/BattlePage/Battle";
 import { PokemonData, UserData } from "./components/Types";
 import { fetchRandomPokemons } from "./utils/utils";
 import { Loader } from "./components/Loader/Loader";
+import { ErrorState } from "./components/ErrorState/ErrorState";
 
 interface AppContext {
   pokemonData: PokemonData[];
@@ -15,6 +16,9 @@ interface AppContext {
   setUserData: (UserData: UserData) => void;
   startLoading: () => void;
   stopLoading: () => void;
+  errorMessage: string | undefined;
+  setErrorMessage: (message: string) => void;
+  onRetry: () => Promise<void>
 }
 
 
@@ -25,19 +29,19 @@ export const App: React.FC = () => {
   let [page, setPage] = React.useState<string>("My Pokemon");
   let [userData, setUserData] = React.useState<UserData>({userWins: 0, userBattles: 0});
   let [Loading, setLoading] = React.useState<number>(0);
-  let abortController = new AbortController();
+  let [errorMessage, setErrorMessage] = React.useState<string | undefined>("");
 
   const startLoading = () => setLoading((prev) => prev + 1);
   const stopLoading = () => setLoading((prev) => prev - 1);
 
-  async function fetchUserPokemonData(signal: AbortSignal) {
+  async function fetchUserPokemonData() {
     try {
       startLoading();
-      const results = await fetchRandomPokemons(signal);
+      const results = await fetchRandomPokemons();
       setPokemonData(results);
       localStorage.setItem("pokemonData", JSON.stringify(results));
     } catch (error) {
-      console.log("Error fetching pokemon  data:", error);
+      setErrorMessage("Error while fetching pokemon data: " + error);
     }
     finally{
       stopLoading();
@@ -46,6 +50,7 @@ export const App: React.FC = () => {
 
   const handleStartOver = async () => {
     console.log("start over");
+    setPage("My Pokemon");
     localStorage.removeItem("pokemonData");
     localStorage.removeItem("UserData");
     await initiatePokemonData();
@@ -59,7 +64,7 @@ export const App: React.FC = () => {
       setPokemonData(JSON.parse(data));
     } else {
       console.log("fetching pokemon data from api")
-      await fetchUserPokemonData(abortController.signal);
+      await fetchUserPokemonData();
     }
   }
 
@@ -91,21 +96,32 @@ export const App: React.FC = () => {
     },
     startLoading: startLoading,
     stopLoading: stopLoading,
+    errorMessage: errorMessage,
+    setErrorMessage: setErrorMessage,
+    onRetry: async () => {
+      // if we had an error state, we will reset the state of the game like start over was clicked
+      setErrorMessage("");
+      await handleStartOver();
+    }
   };
 
   React.useEffect(() => {
     initiatePokemonData();
     initUserData();
     return () => {
-      abortController.abort();
     };
   }, []);
 
   return (
     <AppContext.Provider value={initialContext}>
-      {Loading > 0 &&  <Loader/>}
-      {page === "My Pokemon" && <MyPokemon handleStartOver={handleStartOver} />}
-      {page === "Battle" && <Battle />}
+      {errorMessage && <ErrorState />}
+      {!errorMessage && (
+        <>
+          {Loading > 0 &&  <Loader/>}
+          {page === "My Pokemon" && <MyPokemon handleStartOver={handleStartOver} />}
+          {page === "Battle" && <Battle />}
+        </>
+      )}
     </AppContext.Provider>
   );
 };

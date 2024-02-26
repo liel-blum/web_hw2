@@ -40,7 +40,6 @@ export const Battle: React.FC = () => {
   const [opponentMove, setOpponentMove] = React.useState<MoveData | null>(null);
   const [roundCounter, setRoundCounter] = React.useState<number>(1);
   const [userScore, setUserScore] = React.useState<number>(0);
-  let abortController = new AbortController();
 
   const handlePokemonClick = (pokemon: PokemonData) => {
     if (!pokemon.alreadyPlayed) {
@@ -59,10 +58,10 @@ export const Battle: React.FC = () => {
   async function fetchOpponentPokemons() {
     try {
       context.startLoading();
-      const results = await fetchRandomPokemons(abortController.signal);
+      const results = await fetchRandomPokemons();
       setOpponentPokemonData(results);
     } catch (error) {
-      console.log("Error fetching opponent pokemon data:", error);
+      context.setErrorMessage("Error while fetching opponent pokemons: " + error);
     } finally {
       context.stopLoading();
     }

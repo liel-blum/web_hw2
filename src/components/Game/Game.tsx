@@ -143,7 +143,7 @@ export const Game: React.FC<GameProps> = ({
         );
       }
     } catch (error) {
-      console.log("Error fetching move power:", error);
+      appContext?.setErrorMessage("Error while fetching type factor " + error);
     } finally {
       appContext?.stopLoading();
     }

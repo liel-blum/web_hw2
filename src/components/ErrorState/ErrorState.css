@@ -1,0 +1,38 @@
+.error-state-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.error-title {
+    color: red;
+    font-size: 45px;
+}
+
+.error-message {
+    color: #555;
+    font-size: 30px;
+}
+
+.retry-button {
+    background-color: #3705ff;
+    color: #ffffff;
+    border: none;
+    padding: 0.5em;
+    font-family: inherit;
+    font-size: 2em; 
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center; 
+    width: fit-content; 
+}
+
+.retry-button:hover {
+    background-color: #4c63e9;
+}
+
+.retry-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #4c63e9;
+}
