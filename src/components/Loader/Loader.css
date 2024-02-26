@@ -11,7 +11,7 @@
     255,
     255,
     0.8
-  ); /* Semi-transparent white background */
+  );
   display: flex;
   flex-direction: column;
   justify-content: center;

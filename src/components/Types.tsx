@@ -20,7 +20,6 @@ export interface BaseStats {
   specialDefense: number;
   speed: number;
   defense: number;
-  //do we need other stats that are not defense and attack?
 }
 
 export interface PokemonData {

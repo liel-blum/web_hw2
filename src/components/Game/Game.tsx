@@ -46,16 +46,14 @@ export const Game: React.FC<GameProps> = ({
     isUser: boolean
   ) => {
     let typeFactor = isUser ? userTypeFactor : opponentTypeFactor;
+    let movePower = move.power ? move.power : 0;
     return (
-      (move.power ? move.power : 0 + pokemonData.baseStats.attack) *
-        typeFactor -
-      defenseStat
+      (movePower + pokemonData.baseStats.attack) * typeFactor - defenseStat
     );
   };
 
   const calculateTypeFactors = (
     userDamageRelations: DamageRelations,
-    userTypeName: string,
     opponentTypeName: string
   ): void => {
     let userTF = 1;
@@ -81,19 +79,19 @@ export const Game: React.FC<GameProps> = ({
     }
     if (
       userDamageRelations.double_damage_from.some(
-        (type) => type.name === userTypeName
+        (type) => type.name === opponentTypeName
       )
     ) {
       opponentTF = 2;
     } else if (
       userDamageRelations.half_damage_from.some(
-        (type) => type.name === userTypeName
+        (type) => type.name === opponentTypeName
       )
     ) {
       opponentTF = 0.5;
     } else if (
       userDamageRelations.no_damage_from.some(
-        (type) => type.name === userTypeName
+        (type) => type.name === opponentTypeName
       )
     ) {
       opponentTF = 0;
@@ -137,7 +135,6 @@ export const Game: React.FC<GameProps> = ({
         };
         calculateTypeFactors(
           damageRelations,
-          pokemonData.type.name,
           opponentType
         );
       }

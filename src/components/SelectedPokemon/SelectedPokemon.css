@@ -29,9 +29,9 @@
 }
 
 .move {
-  flex: 0 0 calc(50% - 10px); /* width is 50% minus half the gap */
+  flex: 0 0 calc(50% - 10px); 
   box-sizing: border-box;
-  display: flex; /* Apply flex to center the content inside the .move div */
+  display: flex; 
   justify-content: center;
   align-items: center;
 }

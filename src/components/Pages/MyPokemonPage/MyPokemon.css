@@ -84,6 +84,6 @@
 
 
 .vertical-line {
-    border-left: 2px solid rgb(61, 92, 0); /* Define the appearance of the vertical line */
-    margin-left: 20px; /* Adjust margin as needed */
+    border-left: 2px solid rgb(61, 92, 0); 
+    margin-left: 20px; 
 }

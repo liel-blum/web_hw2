@@ -22,7 +22,6 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
     React.useState<PokemonData | null>(null);
 
   const handlePokemonClick = (pokemon: PokemonData) => {
-    // Toggle selection
     if (selectedPokemon && selectedPokemon.name === pokemon.name) {
       setSelectedPokemon(null);
     } else {

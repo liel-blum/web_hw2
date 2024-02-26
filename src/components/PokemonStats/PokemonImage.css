@@ -17,8 +17,8 @@
 }
 
 .pokemon-image.already-played {
-  filter: grayscale(50%) opacity(60%); /* Grayscale the image */
-  pointer-events: none; /* disables clicking */
+  filter: grayscale(50%) opacity(60%); 
+  pointer-events: none; 
 }
 
 .pokemon-image img {

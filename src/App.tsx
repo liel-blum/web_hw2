@@ -1,11 +1,12 @@
 import React from "react";
-import "./App.css";
 import { MyPokemon } from "./components/Pages/MyPokemonPage/MyPokemon";
 import { Battle } from "./components/Pages/BattlePage/Battle";
 import { PokemonData, UserData } from "./components/Types";
 import { fetchRandomPokemons } from "./utils/utils";
 import { Loader } from "./components/Loader/Loader";
 import { ErrorState } from "./components/ErrorState/ErrorState";
+
+import './App.css';
 
 interface AppContext {
   pokemonData: PokemonData[];
@@ -78,7 +79,7 @@ export const App: React.FC = () => {
     }
   }
 
-  //initial context object that will be used by provider
+
   let initialContext: AppContext = {
     pokemonData: pokemonData,
     setPokemonData: (pokemonData: PokemonData[]) => {
