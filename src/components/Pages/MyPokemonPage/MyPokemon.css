@@ -13,10 +13,9 @@
     background-color: #ffcb05;
     color: #000;
     border: none;
-    padding: 5px 10px; /* Updated padding */
+    padding: 5px 10px; 
     font-family: inherit;
-    font-size: 14px; /* Updated font-size */
-    /* font-weight: bold; */
+    font-size: 14px; 
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -41,7 +40,6 @@
     padding: 10px 20px;
     font-family: inherit;
     font-size: 16px;
-    /* font-weight: ; */
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color 0.3s ease;
