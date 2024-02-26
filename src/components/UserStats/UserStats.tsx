@@ -12,7 +12,7 @@ export const UserStats: React.FC = () => {
         {userData.userBattles === 0 ?
         <p> You haven't played yet</p>
         : <div className="win-container"> <p>You won {userData.userWins} out of {userData.userBattles} battles</p>
-        <p> {Math.floor(percentage)}% </p>
+        <p className="win-rate"> {Math.floor(percentage)}% </p>
         </div>
         }
     </div>

@@ -49,3 +49,13 @@
 .loss-prompt {
     color: red;
 }
+
+.win-rate {
+    display: inline-block;
+    border-radius: 50%;
+    background-color: yellow;
+    color: black;
+    text-align: center;
+    line-height: 30px; /* Center the text vertically */
+    padding: 2%;
+  }
