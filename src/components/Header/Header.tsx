@@ -6,8 +6,6 @@ export interface HeaderProps {
 }
 export const Header: React.FC<HeaderProps> = ({ header }) => {
     return (
-        <div className='header-container'>
-            <h1 className='app-header'> { header } </h1>
-        </div>
+        <h1 className='app-header'> { header } </h1>
     )
 }

@@ -40,7 +40,7 @@ export const MyPokemon: React.FC<MyPokemonProps> = ( {handleStartOver}) => {
   }, [pokemonData]); 
   return (
     <>
-      <Header header="My Pokemon" />
+      <Header header="My Pokémon" />
       <div className="page">
         <div className="start-over-button">
             <Button onClick={handleStartOver} text="Start Over" />

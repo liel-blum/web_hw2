@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap'); */
 @import url('https://fonts.cdnfonts.com/css/pokemon-solid');
 @import url('https://fonts.googleapis.com/css?family=Bungee');
 
@@ -6,16 +6,18 @@
 .app-header {
   font-family: 'Pokemon Solid', sans-serif;
   font-weight: 800;
-  font-size: 3em;
+  font-size: 7em;
   color: #ffcb05; 
   text-shadow: 
     3px 3px 0px #003A70, /* Blue shadow to create depth, similar to Pokémon logo */
     5px 5px 0px #3D7DCA, /* Lighter blue for 3D effect */
     6px 6px 0px rgba(0,0,0,0.15); /* Soft black shadow for more depth */
   -webkit-text-stroke: 1px black; /* Black outline for the letters */
-  text-transform: uppercase; /* Uppercase text */
+  letter-spacing: 3px; /* Spacing between letters */
   display: inline-block; /* To apply the shadows effectively */
-  margin: 0;
+  height:fit-content;
+  margin: -10%; /* Adjust the percentage value to move the header closer to the top */
+  
 }
 
 body {
