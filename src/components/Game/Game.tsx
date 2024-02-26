@@ -50,11 +50,11 @@ export const Game: React.FC<GameProps> = ({
     );
   };
 
-  const caclulateTypeFactors = (
+  const calculateTypeFactors = (
     userDamageRelations: DamageRelations,
     userTypeName: string,
     opponentTypeName: string
-  ): { userTF: number; opponentTF: number } => {
+  ): void => {
     let userTF = 1;
     let opponentTF = 1;
     if (
@@ -95,7 +95,8 @@ export const Game: React.FC<GameProps> = ({
     ) {
       opponentTF = 0;
     }
-    return { userTF, opponentTF };
+    setUserTypeFactor(userTF);
+    setOpponentTypeFactor(opponentTF);
   };
 
   const fetchTypeFactors = async (
@@ -131,63 +132,64 @@ export const Game: React.FC<GameProps> = ({
             (type: TypeRelation) => ({ name: type.name })
           ),
         };
-        const { userTF, opponentTF } = caclulateTypeFactors(
+        console.log("damage relations", damageRelations);
+        calculateTypeFactors(
           damageRelations,
           pokemonData.type.name,
           opponentType
         );
-        setUserTypeFactor(userTF);
-        setOpponentTypeFactor(opponentTF);
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
-    }
-    finally{
+    } finally {
       battleContext?.setLoading(false);
     }
   };
 
   React.useEffect(() => {
-    setIsWinner(null);
-    fetchTypeFactors(userPokemonData, opponentPokemonData.type.name);
-    let userTotalPower = calculateTotalPower(
-      userMove,
-      userPokemonData,
-      opponentPokemonData.baseStats.defense,
-      true
-    );
-    setUserTotalPower(userTotalPower);
-    let opponentTotalPower = calculateTotalPower(
-      opponentMove,
-      opponentPokemonData,
-      userPokemonData.baseStats.defense,
-      false
-    );
-    setOpponentTotalPower(opponentTotalPower);
-    setTimeout(() => {
-      const userWins = userTotalPower >= opponentTotalPower;
-      setIsWinner(userWins);
-      if (userWins) {
-        console.log("userPokemonData wins:", userPokemonData.wins);
-        userPokemonData.wins++;
-        opponentPokemonData.losses++;
-        battleContext?.setUserScore(battleContext?.userScore + 1);
-      } else {
-        userPokemonData.losses++;
-        opponentPokemonData.wins++;
-      }
+    if (userTypeFactor === 0 && opponentTypeFactor === 0) {
+      setIsWinner(null);
+      fetchTypeFactors(userPokemonData, opponentPokemonData.type.name);
+    } else if (userTypeFactor !== 0 && opponentTypeFactor !== 0) {
+      let userTotalPower = calculateTotalPower(
+        userMove,
+        userPokemonData,
+        opponentPokemonData.baseStats.defense,
+        true
+      );
+      setUserTotalPower(userTotalPower);
+      let opponentTotalPower = calculateTotalPower(
+        opponentMove,
+        opponentPokemonData,
+        userPokemonData.baseStats.defense,
+        false
+      );
+      setOpponentTotalPower(opponentTotalPower);
       setTimeout(() => {
-        battleContext?.setSelectedUserPokemon(null);
-        battleContext?.setSelectedOpponentPokemon(null);
-        battleContext?.setUserMove(null);
-        battleContext?.setOpponentMove(null);
-        battleContext?.setRoundCounter(battleContext?.roundCounter + 1);
+        const userWins = userTotalPower >= opponentTotalPower;
+        setIsWinner(userWins);
+        if (userWins) {
+          console.log("userPokemonData wins:", userPokemonData.wins);
+          userPokemonData.wins++;
+          opponentPokemonData.losses++;
+          battleContext?.setUserScore(battleContext?.userScore + 1);
+        } else {
+          userPokemonData.losses++;
+          opponentPokemonData.wins++;
+        }
+        setTimeout(() => {
+          battleContext?.setSelectedUserPokemon(null);
+          battleContext?.setSelectedOpponentPokemon(null);
+          battleContext?.setUserMove(null);
+          battleContext?.setOpponentMove(null);
+          battleContext?.setRoundCounter(battleContext?.roundCounter + 1);
+        }, DELAY_WIN_TIME);
       }, DELAY_WIN_TIME);
-    }, DELAY_WIN_TIME);
+    }
     return () => {
       console.log("cleanup");
     };
-  }, []);
+  }, [userTypeFactor, opponentTypeFactor]);
   return (
     <>
       {isWinner === null && (
