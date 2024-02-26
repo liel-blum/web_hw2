@@ -1,10 +1,10 @@
 import React from "react";
-import { PokemonData, MoveData } from "./Types";
-import { PokemonImage } from "./PokemonStats/PokemonImage";
-import { getRandomIndex } from "../utils/utils";
-import { PokemonMove } from "./PokemonStats/PokemonMove";
-import { BattleContext } from "./Pages/BattlePage/Battle";
-import { AppContext } from "../App";
+import { PokemonData, MoveData } from "../Types";
+import { PokemonImage } from "../PokemonStats/PokemonImage";
+import { getRandomIndex } from "../../utils/utils";
+import { PokemonMove } from "../PokemonStats/PokemonMove";
+import { BattleContext } from "../Pages/BattlePage/Battle";
+import { AppContext } from "../../App";
 
 import "./SelectedPokemon.css";
 

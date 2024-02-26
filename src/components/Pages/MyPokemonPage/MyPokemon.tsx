@@ -5,10 +5,10 @@ import { PokemonStats } from "../../PokemonStats/PokemonStats";
 import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { AppContext } from "../../../App";
 import { Button } from "../../Buttons/Button";
-
 import { PokemonData } from "../../Types";
-import "../GlobalStyles.css";
 import { UserStats } from "../../UserStats/UserStats";
+
+import "../GlobalStyles.css";
 
 interface MyPokemonProps {
   handleStartOver: () => Promise<void>;

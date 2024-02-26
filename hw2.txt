@@ -1,0 +1,4 @@
+URL of git repo: https://github.com/liel-blum/web_hw2
+URL of static web page: https://liel-blum.github.io/web_hw2/
+Liel Blumstein ID: 318601234
+Nofar Avital ID: 315239673

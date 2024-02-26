@@ -4,7 +4,7 @@ import { AppContext } from "../../../App";
 import { PokemonImage } from "../../PokemonStats/PokemonImage";
 import { MoveData, PokemonData } from "../../Types";
 import { fetchRandomPokemons } from "../../../utils/utils";
-import { SelectedPokemon } from "../../SelectedPokemon";
+import { SelectedPokemon } from "../../SelectedPokemon/SelectedPokemon";
 import { Game } from "../../Game/Game";
 import "./Battle.css";
 
