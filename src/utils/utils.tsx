@@ -19,8 +19,8 @@ const getRandomIds = (maxId: number) => {
   return randomIds;
 };
 
-const fetchPokemonData = async (id: number): Promise<PokemonData> => {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+const fetchPokemonData = async (id: number, signal: AbortSignal): Promise<PokemonData> => {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, { signal });
   if (!response.ok) {
     throw new Error(`Error in fetching data for ${id}`);
   } else {
@@ -30,7 +30,7 @@ const fetchPokemonData = async (id: number): Promise<PokemonData> => {
       spriteUrl: responseData.sprites.other["dream_world"]["front_default"],
       height: responseData.height,
       weight: responseData.weight,
-      type: responseData.types[0].type as TypeEntry,
+      type: responseData.types[0].type as TypeEntry, // Only considering the first type as the primary type
       moves: responseData.moves.map(
         (moveElement: MoveElement) => moveElement.move
       ),
@@ -49,9 +49,9 @@ const fetchPokemonData = async (id: number): Promise<PokemonData> => {
   }
 };
 
-export const fetchRandomPokemons = async (): Promise<PokemonData[]> => {
+export const fetchRandomPokemons = async (signal: AbortSignal): Promise<PokemonData[]> => {
     const ids = getRandomIds(MAX_POKEMON_ID);
-    const promises = ids.map((id) => fetchPokemonData(id + 1));
+    const promises = ids.map((id) => fetchPokemonData(id + 1, signal));
     const results = await Promise.all(promises);
     return results;
 }

@@ -13,8 +13,8 @@ interface AppContext {
   setPage: (page: string) => void;
   userData: UserData;
   setUserData: (UserData: UserData) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
+  startLoading: () => void;
+  stopLoading: () => void;
 }
 
 
@@ -24,19 +24,23 @@ export const App: React.FC = () => {
   let [pokemonData, setPokemonData] = React.useState<PokemonData[]>([]);
   let [page, setPage] = React.useState<string>("My Pokemon");
   let [userData, setUserData] = React.useState<UserData>({userWins: 0, userBattles: 0});
-  let [Loading, setLoading] = React.useState<boolean>(false);
+  let [Loading, setLoading] = React.useState<number>(0);
+  let abortController = new AbortController();
 
-  async function fetchUserPokemonData(){
+  const startLoading = () => setLoading((prev) => prev + 1);
+  const stopLoading = () => setLoading((prev) => prev - 1);
+
+  async function fetchUserPokemonData(signal: AbortSignal) {
     try {
-      setLoading(true);
-      const results = await fetchRandomPokemons();
+      startLoading();
+      const results = await fetchRandomPokemons(signal);
       setPokemonData(results);
       localStorage.setItem("pokemonData", JSON.stringify(results));
     } catch (error) {
       console.log("Error fetching pokemon  data:", error);
     }
     finally{
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -55,7 +59,7 @@ export const App: React.FC = () => {
       setPokemonData(JSON.parse(data));
     } else {
       console.log("fetching pokemon data from api")
-      await fetchUserPokemonData();
+      await fetchUserPokemonData(abortController.signal);
     }
   }
 
@@ -85,23 +89,21 @@ export const App: React.FC = () => {
     setUserData: (userData: UserData) => {
       setUserData(userData);
     },
-    loading: Loading,
-    setLoading: (loading: boolean) => {
-      setLoading(loading);
-    }
+    startLoading: startLoading,
+    stopLoading: stopLoading,
   };
 
   React.useEffect(() => {
     initiatePokemonData();
     initUserData();
     return () => {
-      console.log("cleanup");
+      abortController.abort();
     };
   }, []);
 
   return (
     <AppContext.Provider value={initialContext}>
-      {Loading &&  <Loader/>}
+      {Loading > 0 &&  <Loader/>}
       {page === "My Pokemon" && <MyPokemon handleStartOver={handleStartOver} />}
       {page === "Battle" && <Battle />}
     </AppContext.Provider>

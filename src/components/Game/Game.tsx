@@ -1,6 +1,7 @@
 import React from "react";
 import { MoveData, PokemonData } from "../Types";
 import { BattleContext } from "../Pages/BattlePage/Battle";
+import { AppContext } from "../../App";
 
 const DELAY_WIN_TIME = 2500;
 interface GameProps {
@@ -30,6 +31,8 @@ export const Game: React.FC<GameProps> = ({
   opponentPokemonData,
 }) => {
   let battleContext = React.useContext(BattleContext);
+  let appContext = React.useContext(AppContext);
+
   const [userTypeFactor, setUserTypeFactor] = React.useState<number>(0);
   const [opponentTypeFactor, setOpponentTypeFactor] = React.useState<number>(0);
   const [isWinner, setIsWinner] = React.useState<boolean | null>(null);
@@ -101,11 +104,11 @@ export const Game: React.FC<GameProps> = ({
 
   const fetchTypeFactors = async (
     pokemonData: PokemonData,
-    opponentType: string
+    opponentType: string,
   ) => {
     try {
-      battleContext?.setLoading(false);
-      const response = await fetch(pokemonData.type.url);
+      appContext?.startLoading();
+      const response = await fetch(pokemonData.type.url );
       if (!response.ok) {
         throw new Error(
           `Error in fetching type factor for ${pokemonData.type.name}`
@@ -140,9 +143,9 @@ export const Game: React.FC<GameProps> = ({
         );
       }
     } catch (error) {
-      console.error("Error fetching move power:", error);
+      console.log("Error fetching move power:", error);
     } finally {
-      battleContext?.setLoading(false);
+      appContext?.stopLoading();
     }
   };
 
@@ -187,7 +190,6 @@ export const Game: React.FC<GameProps> = ({
       }, DELAY_WIN_TIME);
     }
     return () => {
-      console.log("cleanup");
     };
   }, [userTypeFactor, opponentTypeFactor]);
   return (

@@ -21,8 +21,6 @@ export interface BattleContext {
   setRoundCounter: (round: number) => void;
   userScore: number;
   setUserScore: (score: number) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
 }
 
 export const BattleContext = React.createContext<BattleContext | null>(null);
@@ -42,6 +40,7 @@ export const Battle: React.FC = () => {
   const [opponentMove, setOpponentMove] = React.useState<MoveData | null>(null);
   const [roundCounter, setRoundCounter] = React.useState<number>(1);
   const [userScore, setUserScore] = React.useState<number>(0);
+  let abortController = new AbortController();
 
   const handlePokemonClick = (pokemon: PokemonData) => {
     if (!pokemon.alreadyPlayed) {
@@ -59,13 +58,13 @@ export const Battle: React.FC = () => {
 
   async function fetchOpponentPokemons() {
     try {
-      context.setLoading(true);
-      const results = await fetchRandomPokemons();
+      context.startLoading();
+      const results = await fetchRandomPokemons(abortController.signal);
       setOpponentPokemonData(results);
     } catch (error) {
       console.log("Error fetching opponent pokemon data:", error);
     } finally {
-      context.setLoading(false);
+      context.stopLoading();
     }
   }
 
@@ -93,11 +92,7 @@ export const Battle: React.FC = () => {
     userScore: userScore,
     setUserScore: (score: number) => {
       setUserScore(score);
-    },
-    loading: context.loading,
-    setLoading: (loading: boolean) => {
-      context.setLoading(loading);
-    },
+    }
   };
 
   async function handleBattleEnd() {
@@ -124,7 +119,6 @@ export const Battle: React.FC = () => {
       fetchOpponentPokemons();
     }
     return () => {
-      console.log("cleanup");
     };
   }, [roundCounter]);
   return (

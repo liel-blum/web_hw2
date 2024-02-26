@@ -4,6 +4,8 @@ import { PokemonImage } from "./PokemonStats/PokemonImage";
 import { getRandomIndex } from "../utils/utils";
 import { PokemonMove } from "./PokemonStats/PokemonMove";
 import { BattleContext } from "./Pages/BattlePage/Battle";
+import { AppContext } from "../App";
+
 import "./SelectedPokemon.css";
 
 const NUM_MOVES: number = 4;
@@ -22,8 +24,11 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
   isUser,
 }) => {
   let battleContext = React.useContext(BattleContext);
+  let appContext = React.useContext(AppContext);
   const [movesData, setMovesData] = React.useState<MoveData[]>([]);
   const [randomMoves, setRandomMoves] = React.useState<MoveData[]>([]);
+  const className = isUser ? "user" : "opponent";
+  let abortController = new AbortController();
 
   const getRandomMoves = (moves: MoveData[]): MoveData[] => {
     const randomMoves: MoveData[] = [];
@@ -39,9 +44,9 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
     return randomMoves;
   };
 
-  const fetchMovePower = async (move: MoveData): Promise<number> => {
+  const fetchMovePower = async (move: MoveData, signal: AbortSignal): Promise<number> => {
     try {
-      const response = await fetch(move.url);
+      const response = await fetch(move.url, { signal });
       if (!response.ok) {
         throw new Error(`Error in fetching move data for ${move.name}`);
       } else {
@@ -50,40 +55,45 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
         return responseData.power ? responseData.power : 0;
       }
     } catch (error) {
-      console.error("Error fetching move power:", error);
+      console.log("Error fetching move power:", error);
       return -1;
     }
   };
 
-  const fetchMovesPower = async (moves: MoveData[]): Promise<void> => {
+  const fetchMovesPower = async (moves: MoveData[], signal: AbortSignal): Promise<void> => {
     try{
       const promises = moves.map(async (moveData: MoveData, index) => {
-        let power = await fetchMovePower(moveData);
+        let power = await fetchMovePower(moveData, signal);
         moves[index].power = power;
       });
       await Promise.all(promises);
       setMovesData(moves);
     }
     catch (error) {
-      console.error("Error fetching move power:", error);
+      console.log("Error fetching move power:", error);
+    }
+    finally {
+      appContext?.stopLoading();
     }
   };
-  const className = isUser ? "user" : "opponent";
+
+
   React.useEffect(() => {
-    battleContext?.setLoading(true);
     if (!isUser && battleContext?.userMove) {
       console.log("setting opponent move")
       battleContext?.setOpponentMove(chooseRandomMove(randomMoves));
     } else if (!battleContext?.userMove) {
       const randomMoves = getRandomMoves(pokemonData.moves);
       setRandomMoves(randomMoves);
-      fetchMovesPower(randomMoves);
+      fetchMovesPower(randomMoves, abortController.signal);
     }
-    battleContext?.setLoading(false);
     return () => {
-      console.log("cleanup");
+      if (!battleContext?.userMove){
+        abortController.abort();
+      }
     };
   }, [battleContext?.userMove]);
+  
   return (
     <div className={`selected-pokemon ${className}`}>
       <div className="selected-pokemon-image">
@@ -98,7 +108,7 @@ export const SelectedPokemon: React.FC<SelectedPokemonProps> = ({
           <h1>{pokemonData.name}</h1>
           <ul>
             <div className="moves-container">
-            {movesData.map((move, index) => (
+            { movesData.map((move, index) => (
               <PokemonMove key={index} moveData={move} isUser={isUser} />
             ))}
             </div>
