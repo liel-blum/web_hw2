@@ -64,9 +64,8 @@ export const Battle: React.FC = () => {
       setOpponentPokemonData(results);
     } catch (error) {
       console.log("Error fetching opponent pokemon data:", error);
-    }
-    finally {
-    context.setLoading(false);
+    } finally {
+      context.setLoading(false);
     }
   }
 
@@ -101,11 +100,14 @@ export const Battle: React.FC = () => {
     },
   };
 
- async function handleBattleEnd () {
+  async function handleBattleEnd() {
     setTimeout(() => {
       let UserData = context.userData;
       let userBattleResult = userScore >= 2 ? 1 : 0;
-      let updatedUserData = { userWins: UserData.userWins + userBattleResult, userBattles: UserData.userBattles + 1}
+      let updatedUserData = {
+        userWins: UserData.userWins + userBattleResult,
+        userBattles: UserData.userBattles + 1,
+      };
       context.setUserData(updatedUserData);
       localStorage.setItem("UserData", JSON.stringify(updatedUserData));
       localStorage.setItem("pokemonData", JSON.stringify(userPokemonData));
@@ -114,7 +116,7 @@ export const Battle: React.FC = () => {
   }
 
   React.useEffect(() => {
-        if (roundCounter > 3) {
+    if (roundCounter > 3) {
       handleBattleEnd();
     } else if (roundCounter == 1) {
       setUserScore(0);
@@ -129,7 +131,7 @@ export const Battle: React.FC = () => {
     <BattleContext.Provider value={initialContext}>
       <Header header="Battle" />
       <div className="battle-prompt">
-        { roundCounter<= 3 && <h1>{`Round ${roundCounter}`}</h1>}
+        {roundCounter <= 3 && <h1>{`Round ${roundCounter}`}</h1>}
         <div className="user">
           {!selectedUserPokemon && (
             <div className="user pokemons">
@@ -170,16 +172,20 @@ export const Battle: React.FC = () => {
               )}
           </div>
         )}
-        {roundCounter > 3 && 
+        {roundCounter > 3 && (
           <div className="result">
             {userScore >= 2 && (
-              <p className="win-prompt">You Won the Battle!</p>
+              <div className="play-prompt">
+                <p className="win-prompt">You Won the Battle!</p>
+              </div>
             )}
             {userScore < 2 && (
-              <p className="loss-prompt">You Lost the Battle!</p>
+              <div className="play-prompt">
+                <p className="loss-prompt">You Lost the Battle!</p>
+              </div>
             )}
           </div>
-        }
+        )}
         <div className="opponent">
           {!selectedOpponentPokemon && (
             <div className="opponent pokemons">
@@ -190,7 +196,7 @@ export const Battle: React.FC = () => {
                   spriteUrl={data.spriteUrl}
                   showName={true}
                   alreadyPlayed={data.alreadyPlayed}
-                  isUser={false}  
+                  isUser={false}
                 />
               ))}
             </div>
