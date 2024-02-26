@@ -14,7 +14,7 @@ export const ErrorState: React.FC = () =>{
         <p className="error-message">
           There was an error while fetching data: {context?.errorMessage}.
         </p>
-        <Button onClick={context.onRetry} text="retry" />
+        <Button onClick={context.onRetry} text="restart" />
     </div>
   )
 };

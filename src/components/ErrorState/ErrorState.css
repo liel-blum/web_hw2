@@ -14,7 +14,7 @@
     font-size: 30px;
 }
 
-.retry-button {
+.restart-button {
     background-color: #3705ff;
     color: #ffffff;
     border: none;
@@ -28,11 +28,11 @@
     width: fit-content; 
 }
 
-.retry-button:hover {
+.restart-button:hover {
     background-color: #4c63e9;
 }
 
-.retry-button:focus {
+.restart-button:focus {
     outline: none;
     box-shadow: 0 0 0 3px #4c63e9;
 }

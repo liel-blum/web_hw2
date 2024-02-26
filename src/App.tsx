@@ -51,6 +51,7 @@ export const App: React.FC = () => {
   const handleStartOver = async () => {
     console.log("start over");
     setPage("My Pokemon");
+    setErrorMessage("");
     localStorage.removeItem("pokemonData");
     localStorage.removeItem("UserData");
     await initiatePokemonData();
