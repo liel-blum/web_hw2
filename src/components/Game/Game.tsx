@@ -200,12 +200,12 @@ export const Game: React.FC<GameProps> = ({
         </div>
       )}
       {isWinner && (
-        <div className="playPrompt">
+        <div className="play-prompt">
           <h2 className="win-prompt">Your Pokemon Won!</h2>
         </div>
       )}
       {isWinner === false && (
-        <div className="playPrompt">
+        <div className="play-prompt">
           <h2 className="loss-prompt">Your Pokemon Lost!</h2>
         </div>
       )}
