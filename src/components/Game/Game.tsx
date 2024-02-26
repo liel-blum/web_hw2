@@ -33,6 +33,8 @@ export const Game: React.FC<GameProps> = ({
   const [userTypeFactor, setUserTypeFactor] = React.useState<number>(0);
   const [opponentTypeFactor, setOpponentTypeFactor] = React.useState<number>(0);
   const [isWinner, setIsWinner] = React.useState<boolean | null>(null);
+  const [userTotalPower, setUserTotalPower] = React.useState<number>(0);
+  const [opponentTotalPower, setOpponentTotalPower] = React.useState<number>(0);
 
   const calculateTotalPower = (
     move: MoveData,
@@ -101,6 +103,7 @@ export const Game: React.FC<GameProps> = ({
     opponentType: string
   ) => {
     try {
+      battleContext?.setLoading(false);
       const response = await fetch(pokemonData.type.url);
       if (!response.ok) {
         throw new Error(
@@ -138,7 +141,9 @@ export const Game: React.FC<GameProps> = ({
       }
     } catch (error) {
       console.error("Error fetching move power:", error);
-      throw error;
+    }
+    finally{
+      battleContext?.setLoading(false);
     }
   };
 
@@ -151,12 +156,14 @@ export const Game: React.FC<GameProps> = ({
       opponentPokemonData.baseStats.defense,
       true
     );
+    setUserTotalPower(userTotalPower);
     let opponentTotalPower = calculateTotalPower(
       opponentMove,
       opponentPokemonData,
       userPokemonData.baseStats.defense,
       false
     );
+    setOpponentTotalPower(opponentTotalPower);
     setTimeout(() => {
       const userWins = userTotalPower >= opponentTotalPower;
       setIsWinner(userWins);
@@ -185,19 +192,19 @@ export const Game: React.FC<GameProps> = ({
     <>
       {isWinner === null && (
         <div className="playPrompt">
-          <p className="move-prompt">{`${userMove.name} >> ${userMove.power}`}</p>
+          <p className="move-prompt">{`${userMove.name} >> ${userTotalPower}`}</p>
           <p className="move-prompt">vs</p>
-          <p className="move-prompt">{`${opponentMove.name} >> ${opponentMove.power}`}</p>
+          <p className="move-prompt">{`${opponentMove.name} >> ${opponentTotalPower}`}</p>
         </div>
       )}
       {isWinner && (
         <div className="playPrompt">
-          <p className="win-prompt">Your Pokemon Won!</p>
+          <h2 className="win-prompt">Your Pokemon Won!</h2>
         </div>
       )}
       {isWinner === false && (
         <div className="playPrompt">
-          <p className="loss-prompt">Your Pokemon Lost!</p>
+          <h2 className="loss-prompt">Your Pokemon Lost!</h2>
         </div>
       )}
     </>

@@ -24,13 +24,14 @@ export const PokemonImage: React.FC<PokemonImageProps> = ({
     }
   };
 
-  const cursorStyle = alreadyPlayed ? "default" : "pointer";
-  const className = alreadyPlayed ? "already-played" : "";
+  let className = alreadyPlayed ? "pokemon-image already-played" : "pokemon-image";
+  className += isUser ? " user" : " opponent";
+  console.log("name", name, "isUser", isUser, "alreadyPlayed", alreadyPlayed, "className", className);
   return (
     <div className="pokemon-div" >
       {showName && <p className="pokemon-name">{name}</p>}
-      <div className={`pokemon-image ${className}`} onClick={handleClick}>
-        <img src={spriteUrl} alt={name} style={{ cursor: cursorStyle }} />
+      <div className={`${className}`} onClick={handleClick}>
+        <img src={spriteUrl} alt={name} />
       </div>
     </div>
   );

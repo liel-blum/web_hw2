@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 @import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+@import url('https://fonts.googleapis.com/css?family=Bungee');
+
 
 .app-header {
   font-family: 'Pokemon Solid', sans-serif;
@@ -18,7 +19,7 @@
 }
 
 body {
-  font-family: 'Roboto', 'calibri';
+  font-family: 'Bungee', 'calibri';
   background-color: #beeaa9;
   color: #2f3542;
   margin: 0;

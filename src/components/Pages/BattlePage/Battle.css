@@ -3,11 +3,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px;
+    margin: 0;
+    justify-content: center;
 }
-
+.battle-prompt h1{
+    /* font-size: 2em; */
+    margin: 0px;
+}
 .game {
     flex-grow: 2;
+    margin: 1em;
 }
 
 .pokemons {

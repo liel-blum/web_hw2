@@ -1,7 +1,9 @@
 .pokemon-stats {
+    font-family: "Audiowide", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1;
 }
 
 .stats {
@@ -13,6 +15,6 @@
 
 .win-stats {
     font-size: 1.5em; 
-}
+    }
 /* 
 .pokemon-stats */

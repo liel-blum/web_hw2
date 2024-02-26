@@ -67,34 +67,20 @@
     flex-grow: 1;
 }
 
-/* .pokemon-images {
-    display: flex;
-    flex-direction: row;
-} */
+.pokemon-right {
+    flex-grow:1 ;
+    
+}   
 
 .pokemon-images {
     display: flex;
-    flex-direction: column;
-    align-items: center; /* This centers the items horizontally in the container */
-    justify-content: space-around; /* This evenly spaces the items vertically */
-    /* You can add additional styling as needed, like padding or margins */
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: space-around;;
 }
 
-.pokemon-image {
-    flex: 4;
-    align-self: center;
-    cursor: pointer;
-}
 
-.pokemon-image:hover:not(.alreadyPlayed) {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.pokemons-right {
-    flex-grow: 5;
-}
-
-.pokemon-stats {
-    /* flex: 4; */
-    font-family: "Audiowide", sans-serif;
+.vertical-line {
+    border-left: 2px solid rgb(61, 92, 0); /* Define the appearance of the vertical line */
+    margin-left: 20px; /* Adjust margin as needed */
 }
